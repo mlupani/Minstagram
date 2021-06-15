@@ -1,0 +1,17 @@
+.container{
+  margin-top:100px;
+  margin-left:450px;
+}
+
+.cardbody{
+  padding: 2rem 6rem;
+}
+
+.active{
+    border-top:1px solid black !important;
+    color:black !important
+}
+
+.inactive{
+    color:gray !important;
+}

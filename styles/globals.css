@@ -1,7 +1,7 @@
 html,
 body {
   padding: 0;
-  margin: 0;
+  /*margin: 0;*/
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
@@ -13,4 +13,27 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.info-modal .modal-content{
+  width: 250px !important;
+  text-align: center !important;
+  margin-left: 15% !important;
+  border-radius: 1rem !important;
+}
+
+.lista_modal{
+  border-radius: 1rem !important;
+}
+
+.card-body{
+  padding-right:1rem !important
+}
+
+.row{
+  --bs-gutter-x:0 !important
+}
+
+figure{
+  margin: 0 0 0 !important;
 }

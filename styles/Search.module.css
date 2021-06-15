@@ -1,0 +1,50 @@
+.textareaclass::-webkit-input-placeholder{
+    text-align:center;
+    -webkit-transition: ease-in 0.2s;
+    transition: ease-in 0.2s;
+    -webkit-transform-origin: 0 50%;
+    transform-origin: 0 50%;
+}
+
+.textareaclass::-moz-placeholder{
+    text-align:center;
+    -webkit-transition: ease-in 0.2s;
+    transition: ease-in 0.2s;
+    -webkit-transform-origin: 0 50%;
+    transform-origin: 0 50%;
+}
+
+.textareaclass::-ms-input-placeholder{
+    text-align:center;
+    -webkit-transition: ease-in 0.2s;
+    transition: ease-in 0.2s;
+    -webkit-transform-origin: 0 50%;
+    transform-origin: 0 50%;
+}
+
+.textareaclass:focus::-webkit-input-placeholder {
+    -webkit-transform: translateX(-42%);
+    transform: translateX(-42%);
+}
+
+.textareaclass:focus::-moz-placeholder {
+    -webkit-transform: translateX(-42%);
+    transform: translateX(-42%);
+}
+
+.textareaclass:focus::-ms-input-placeholder {
+    -webkit-transform: translateX(-42%);
+    transform: translateX(-42%);
+}
+
+.textareaclass{
+    transition: translateX 6s ease-in;
+    resize: none;
+}
+
+.avatar {
+  vertical-align: middle;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}

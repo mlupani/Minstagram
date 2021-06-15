@@ -1,0 +1,4 @@
+chequear rendimiento (renderizados)
+chequear rutas
+chequear responsive
+archivos envv

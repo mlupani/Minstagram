@@ -1,0 +1,20 @@
+.avatar {
+  vertical-align: middle;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50%;
+}
+
+.alertShown {
+  opacity: 0.9;
+  /*transition: all .5s ease-in-out;*/
+  height:50px;
+  transition: height, 0.2s linear;
+}
+
+.alertHidden {
+  /*transition: all .5s ease-in-out;*/
+  transition: height, 0.2s linear;
+  height:0px;
+  opacity: 0;
+}

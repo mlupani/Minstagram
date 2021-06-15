@@ -1,0 +1,23 @@
+.col{
+    padding-right: 0px;
+    padding-left :0px;
+}
+
+.square {
+    float:left;
+    position: relative;
+    width: 100%;
+    /*padding-bottom : 30%; */
+    margin:0.50%;
+    background-color:#1E1E1E;
+    overflow:hidden;
+    height:100px;
+}
+
+.bg{
+    background-position:center center;
+    background-repeat:no-repeat;
+    background-size:cover; /* you change this to "contain" if you don't want the images to be cropped */
+    color:#fff;
+    padding-bottom : 30%;
+}

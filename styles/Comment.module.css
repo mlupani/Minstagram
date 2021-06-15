@@ -1,0 +1,14 @@
+.avatar {
+  vertical-align: middle;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+
+.avatar_selected {
+  vertical-align: middle;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid orchid;
+}
