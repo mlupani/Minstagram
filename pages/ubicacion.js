@@ -12,7 +12,7 @@ const Ubicacion = () => {
     useEffect(() => {
         var tag = document.createElement('script');
         tag.setAttribute("id", "scriptGoogle");
-        tag.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCIAar1IC3lSey6dxPrL7TUyGpWcQLIXYM&key=AIzaSyCIAar1IC3lSey6dxPrL7TUyGpWcQLIXYM&libraries=places"
+        tag.src = 'https://maps.googleapis.com/maps/api/js?&key='+process.env.NEXT_PUBLIC_APIKEY_GOOGLE+'&libraries=places'
         tag.addEventListener('load', ()=> setLoaded(true))
 
         if(!loaded)
