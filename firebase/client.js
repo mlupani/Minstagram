@@ -1102,7 +1102,7 @@ export const UpdateLikeCountCommentOfComments = (id, type) => {
     });
 }
 
-export const addPostToFav = (idPost, userName, avatar, userID, likeUserID, avatarLike, img, avatarLikeFilter) => {
+export const addPostToFav = (idPost, userName, avatar, userID, likeUserID, avatarLike, img, avatarLikeFilter='normal') => {
     return db.collection("likes").add({
         idPost,
         userName,

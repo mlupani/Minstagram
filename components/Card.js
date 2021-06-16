@@ -74,7 +74,7 @@ const Card = ({createdAt, userName, img, likeCount, content, id, avatar, userID,
                 setStateFav(1)
 
             if(user)
-                addPostToFav(id, userName, avatar, userID, user.userID, user.avatar, img, filter, user.filter)
+                addPostToFav(id, userName, avatar, userID, user.userID, user.avatar, img, user.filter )
         }
 
         if(type=="Remove"){
