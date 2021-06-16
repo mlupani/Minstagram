@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from 'styles/chatInbox.module.css'
+import styles from 'styles/ChatInbox.module.css'
 import useUser from 'hooks/useUser'
 import useTimeAgo from 'hooks/useTimeAgo'
 import { useRouter } from 'next/router'
