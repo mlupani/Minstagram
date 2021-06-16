@@ -1,5 +1,5 @@
 import { useState,  useEffect } from 'react'
-import { UpdateLikeCountPost, addPostToFav, removePostToFav, addPostToSaves, removePostSaves, deletePost, getCommentsLikesbyPost, RemovefollowUser,deleteImage } from 'firebase/client'
+import { UpdateLikeCountPost, addPostToFav, removePostToFav, addPostToSaves, removePostSaves, deletePost, getCommentsLikesbyPost, RemovefollowUser,deleteImage, getLikesByPost, getCommentsByPost } from 'firebase/client'
 import useTimeAgo from 'hooks/useTimeAgo'
 import Link from 'next/link'
 import styles from 'styles/Card.module.css'
@@ -12,7 +12,7 @@ import useUser from 'hooks/useUser'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
 import { Carousel } from 'react-responsive-carousel'
 
-const Card = ({createdAt, userName, img, likeCount, content, id, avatar, userID, likesUser, commentCount, comments, place, savesUser, actualUserID, filter }) => {
+const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser, comments, place, savesUser, actualUserID, filter }) => {
 
     const user = useUser();
     const timeAgo = useTimeAgo(createdAt)
@@ -22,10 +22,17 @@ const Card = ({createdAt, userName, img, likeCount, content, id, avatar, userID,
     const [IDSave, setIDSave] = useState('')
     const [modalShow, setModalShow] = useState(false)
     const [postLikesComments, setPostLikesComments] = useState('')
+    const [likeCount, setLikeCount] = useState([])
+    const [commentCount, setCommentCount] = useState([])
 
     useEffect(() => {
 
         let unsubscribepostLikesComments
+        let unsubscribeLikes
+        let unsubscribeComments
+
+        unsubscribeLikes = getLikesByPost(id, setLikeCount)
+        unsubscribeComments = getCommentsByPost(id, setCommentCount)
         unsubscribepostLikesComments = getCommentsLikesbyPost(id, setPostLikesComments)
 
         likesUser.map(like => {
@@ -40,7 +47,11 @@ const Card = ({createdAt, userName, img, likeCount, content, id, avatar, userID,
             }
         })
 
-        return () => unsubscribepostLikesComments && unsubscribepostLikesComments()
+        return () => {
+            unsubscribepostLikesComments && unsubscribepostLikesComments()
+            unsubscribeLikes && unsubscribeLikes()
+            unsubscribeComments && unsubscribeComments()
+        }
 
     },[likesUser, stateFav, savesUser])
 
@@ -52,8 +63,6 @@ const Card = ({createdAt, userName, img, likeCount, content, id, avatar, userID,
         }, 1500);
 
         if(!IDfav){
-            UpdateLikeCountPost(id, 1)
-
             if(user)
                 addPostToFav(id, userName, avatar, userID, user.userID, user.avatar, img, user.filter)
         }
@@ -66,8 +75,6 @@ const Card = ({createdAt, userName, img, likeCount, content, id, avatar, userID,
     }
 
     const handleLikeCount = (e,type) =>{
-
-        UpdateLikeCountPost(id, type=="Add"?1:-1)
 
         if(type=="Add"){
             if(e.type =="dblclick")
@@ -167,8 +174,8 @@ const Card = ({createdAt, userName, img, likeCount, content, id, avatar, userID,
                                 )}
                             </Carousel>:
                         img && img.length == 1?
-                        <figure style={{"marginBottom":"0px"}} className={`filter-${img[0].filterApplied.toLowerCase()}`}>
-                            <img width="100%" height="auto" {...favDoubleTap}  src={img[0].img} className="card-img-top img-fluid" alt="507405.jpg"  />
+                        <figure style={{"marginBottom":"0px"}}  {...favDoubleTap} className={`filter-${img[0].filterApplied.toLowerCase()}`}>
+                            <img width="100%" height="auto"  src={img[0].img} className="card-img-top img-fluid" alt="507405.jpg"  />
                         </figure>: 'Loading img..'
                         }
                         <a style={{"textDecoration":"none", "color":"white"}}><div className={`container ${stateFav?styles.alertShown:styles.alertHidden}`}><FavFill_icon width="50" height="50" /></div></a>
@@ -196,12 +203,12 @@ const Card = ({createdAt, userName, img, likeCount, content, id, avatar, userID,
                                         </div>
                             }
                         </div>
-                        <p style={{"marginBottom":"2px","fontSize":"14px"}} className="card-text">{likeCount} Me gusta</p>
+                        <p style={{"marginBottom":"2px","fontSize":"14px"}} className="card-text">{likeCount.length} Me gusta</p>
                         <p style={{"marginBottom":"10px"}} className="card-text" ><span style={{"fontWeight":"bold", "marginRight":"5px"}}>{userName}</span>
                             <span>{content.length > 90 && !viewDesc? (<>{content.substring(1,90)} <a onClick={()=>setViewDesc(true)}>...Ver Mas</a></>):content}</span>
                         </p>
                         {
-                            commentCount > 2? <Link href="/comments/[id]" as={`/comments/${id}`} ><p className="card-text text-muted" style={{"color":"gray", "marginBottom":"2px"}}>Ver los {commentCount} comentarios</p></Link>:''
+                            commentCount.length > 2? <Link href="/comments/[id]" as={`/comments/${id}`} ><p className="card-text text-muted" style={{"color":"gray", "marginBottom":"2px"}}>Ver los {commentCount.length} comentarios</p></Link>:''
                         }
                         {
                             comments && comments.map((comment, index) => {

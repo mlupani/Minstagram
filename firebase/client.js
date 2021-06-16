@@ -454,7 +454,29 @@ export const getLatestPosts = callback => {
     })
 }
 
-export const getLatestPostsFollows = (follows, userID, callback, lastVisible, callbackLast, setLoadingPage) => {
+export const getLatestPostsFollows = (follows, userID, callback, callbackLast, isNotFirstTime, limit) => {
+
+    if(!follows.includes(userID))
+        follows.push(userID)
+
+    return db
+        .collection("posts")
+        .where('userID', 'in', follows)
+        .orderBy("createdAt", "desc")
+        .limit(limit ? limit : 5)
+        .onSnapshot(({ docs }) => {
+            const newPosts = docs.map(getMapPosts)
+
+            if(!isNotFirstTime){
+                var lastVisible = docs[docs.length-1];
+                callbackLast(lastVisible)
+            }
+
+            callback(newPosts)
+        })
+}
+
+export const getLatestPostsFollowsPagination = (follows, userID, callback, lastVisible, callbackLast, setLoadingPage) => {
 
     follows.push(userID)
 
@@ -468,7 +490,8 @@ export const getLatestPostsFollows = (follows, userID, callback, lastVisible, ca
         .orderBy("createdAt", "desc")
         .startAfter(lastVisible)
         .limit(5)
-        .onSnapshot(({ docs }) => {
+        .get()
+        .then(({ docs }) => {
             var lastVisible = docs[docs.length-1];
             callbackLast(lastVisible)
             const newPosts = docs.map(getMapPosts)
@@ -695,6 +718,46 @@ export const getCommentsLikesbyPost = (postID, callback) => {
         })
 
       callback(likesComments)
+    })
+}
+
+export const getLikesByPost = (postID, callback) => {
+    return db
+    .collection("likes")
+    .where("idPost", "==", postID)
+    .onSnapshot(({ docs }) => {
+
+        const likes = docs.map(doc =>{
+            const data = doc.data()
+            const id = doc.id
+
+            return {
+                ...data,
+                id
+            }
+        })
+
+      callback(likes)
+    })
+}
+
+export const getCommentsByPost = (postID, callback) => {
+    return db
+    .collection("comments")
+    .where("idPost", "==", postID)
+    .onSnapshot(({ docs }) => {
+
+        const comments = docs.map(doc =>{
+            const data = doc.data()
+            const id = doc.id
+
+            return {
+                ...data,
+                id
+            }
+        })
+
+      callback(comments)
     })
 }
 

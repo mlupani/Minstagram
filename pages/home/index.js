@@ -1,5 +1,5 @@
 import { useEffect, useState, Fragment, Suspense, lazy, useCallback } from 'react'
-import { getLatestPostsFollows, getCommentsbyPostArray, getLikesUser, getPostsSaved } from 'firebase/client'
+import { getLatestPostsFollows, getCommentsbyPostArray, getLikesUser, getPostsSaved, getLatestPostsFollowsPagination } from 'firebase/client'
 import Head from 'next/head'
 import Header from 'components/Header'
 import useUser from 'hooks/useUser'
@@ -41,7 +41,7 @@ export const Home = () => {
         let unsubscribeSaves
 
         if(user){
-            unsubscribe = getLatestPostsFollows(user.followsCount, user.userID, setPosts, typeof lastVisible != 'undefined' ? lastVisible:'', setLastVisible, setLoadingPage);
+            unsubscribe = getLatestPostsFollows(user.followsCount, user.userID, setPosts, setLastVisible, isPage, posts.length);
             unsubscribeLikes = getLikesUser(user.userID, setLikesUser)
             unsubscribeSaves = getPostsSaved(user.userID, setSavesUser)
         }
@@ -50,7 +50,12 @@ export const Home = () => {
             unsubscribeLikes && unsubscribeLikes()
             unsubscribeSaves && unsubscribeSaves()
         }
-    },[user, isPage])
+    },[user])
+
+    useEffect(() =>{
+        if(user)
+            getLatestPostsFollowsPagination(user.followsCount, user.userID, setPosts, typeof lastVisible != 'undefined' ? lastVisible:'', setLastVisible, setLoadingPage)
+    },[isPage])
 
     useEffect(() =>{
         let postComments = []
