@@ -41,6 +41,7 @@ const Preview = () => {
         setHeight(height)
     }
 
+    /*
     useEffect(() =>{
 
         if(localStorage.getItem("filesSelected")){
@@ -52,6 +53,7 @@ const Preview = () => {
             setUploadedImg(1);
 
     },[])
+    */
 
     const setRotation = useCallback(() => {
         setCountRotation(countRotation+1)
