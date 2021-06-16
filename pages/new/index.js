@@ -24,14 +24,12 @@ const New = () => {
     useEffect(() =>{
 
 
-        /*
         if(localStorage.getItem("imgUpload")){
             const imgs = JSON.parse(localStorage.getItem("imgUpload"))
             setUploadedImg(imgs)
         }
         else
             setUploadedImg(1);
-            */
 
         if(localStorage.getItem("placeSelected") && !placeLoaded){
             setSelectedPlace(localStorage.getItem("placeSelected"))
