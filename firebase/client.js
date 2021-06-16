@@ -2,7 +2,15 @@ import firebase from 'firebase';
 import router from 'next/router'
 import Compressor from 'compressorjs';
 
-const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CONFIG)
+const firebaseConfig = {
+  apiKey: "AIzaSyA797d7ggIZp28338uUNFW5oHFxBGy55mg",
+  authDomain: "mistragram.firebaseapp.com",
+  projectId: "mistragram",
+  storageBucket: "mistragram.appspot.com",
+  messagingSenderId: "686194008592",
+  appId: "1:686194008592:web:795f79f7341b26fb8fe095",
+  measurementId: "G-D58EJH7CWN"
+};
 
 const errorsLogin = {
     'error': 'Hubo un Error',
