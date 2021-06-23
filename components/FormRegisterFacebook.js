@@ -3,7 +3,7 @@ import { addUserToCollection, updateConnectFirebaseID, generateKeyWords } from '
 import styles from 'styles/User.module.css'
 import { Arrow_icon } from 'components/icons'
 
-const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithPhone, setRegisterWithFacebook}) => {
+const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithFacebook}) => {
 
     let [userLogin, setUserLogin] = useState('')
     const [passLogin, setPassLogin] = useState('')
@@ -13,7 +13,14 @@ const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithPhone, setRe
     const [picture, setPicture] = useState('')
 
     useEffect(() => {
-        setEmail(registerWithFacebook.additionalUserInfo.profile.email)
+
+        let email = ''
+        if(registerWithFacebook.user.providerData[0].email)
+            email = registerWithFacebook.user.providerData[0].email
+        else
+            email = registerWithFacebook.additionalUserInfo.profile.email
+
+        setEmail(email)
         setName(registerWithFacebook.additionalUserInfo.profile.name)
         setUid(registerWithFacebook.user.uid)
         setPicture(registerWithFacebook.additionalUserInfo.profile.picture.data.url)
