@@ -26,7 +26,6 @@ const FormLogin = ({setUsuarioLogin, setSignup, errorLogin, setErrorLogin, setFo
     const handleClick = async () => {
         await loginWithFacebook().then(async logged => {
         if(logged){
-            console.log(logged)
             const resID = await getUserInCollectionFirebaseID(logged.user.uid)
             if(resID.length)
             {
