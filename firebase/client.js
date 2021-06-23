@@ -272,7 +272,7 @@ export const updateProvidersUser = (userID, provider, vinc) => {
 
 }
 
-export const loginWithFacebook = () => {
+export const loginWithFacebook = async () => {
     const facebookProvider = new firebase.auth.FacebookAuthProvider()
     return firebase.auth().signInWithPopup
     (facebookProvider)
