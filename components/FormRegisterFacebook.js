@@ -42,6 +42,8 @@ const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithFacebook}) =
         })
     }
 
+    console.log(registerWithFacebook)
+
     return (
         <Fragment>
             <div className="row">
