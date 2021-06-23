@@ -1192,6 +1192,7 @@ export const addPostToSaves = (idPost, userID, img, filter) => {
 export const addUserToCollection = (userID_firebase, displayName, userName, avatar, email, phone, keyword) => {
 
     if(!avatar) avatar = "https://www.seekpng.com/png/full/245-2454602_tanni-chand-default-user-image-png.png"
+    if(typeof email == "undefined") email = ''
 
     return db.collection("users")
     .add({
