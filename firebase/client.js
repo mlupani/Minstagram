@@ -646,6 +646,13 @@ export const updateViewMessage = (nameChat, doc) => {
     });
 }
 
+export const updateSubscriptionNotifications = (doc, subscription) => {
+    var user = db.collection('users').doc(doc);
+    user.update({
+        subscriptionNotifications: JSON.stringify(subscription)
+    });
+}
+
 export const sendFollowRequest = (toUserID, fromUserID, fromUsername, fromDisplayName, fromAvatar, filterAvatar) => {
     return db.collection("followRequests").add({
         toUserID,

@@ -1,14 +1,15 @@
 import { useEffect, useState, Fragment, Suspense, lazy, useCallback } from 'react'
-import { getLatestPostsFollows, getCommentsbyPostArray, getLikesUser, getPostsSaved, getLatestPostsFollowsPagination } from 'firebase/client'
+import { getLatestPostsFollows, getCommentsbyPostArray, getLikesUser, getPostsSaved, getLatestPostsFollowsPagination, updateSubscriptionNotifications } from 'firebase/client'
 import Head from 'next/head'
 import Header from 'components/Header'
 import useUser from 'hooks/useUser'
 import useNearScreen from 'hooks/useNearScreen'
 import debounce from "just-debounce-it";
+import { subscribeNotifications } from 'services/notifications'
 
 const Card = lazy(() => import('components/Card'))
 
-export const Home = () => {
+export const Home = ({registration}) => {
 
     const user = useUser()
     const [posts, setPosts] = useState('')
@@ -23,6 +24,7 @@ export const Home = () => {
     const {isNearScreen, elementRef} = useNearScreen({distance: '100px', once})
     //USO DEBOUNCE CON USECALLBACK PARA LLAMAR UNA VEZ A LA REFERENCIA DEL SETISPAGE PARA LLAMARLO SOLO UNA CANTIDAD LIMITADA DE VECES
     const debounceSetIsPage = useCallback(debounce(() => setIsPage(prevState=> prevState+1),200));
+    const [subscriptionNotifications, setSubscriptionNotifications] = useState(null)
 
     useEffect(() => {
         if(isNearScreen){
@@ -72,6 +74,15 @@ export const Home = () => {
             getCommentsbyPostArray(idPostsComments, setcommentsPosts)
         }
     },[idPostsComments])
+
+    useEffect(async () =>{
+        await subscribeNotifications(setSubscriptionNotifications)
+    },[])
+
+    useEffect(() =>{
+        if(user && user.subscriptionNotifications.endpoint != subscriptionNotifications.endpoint)
+            updateSubscriptionNotifications(user.userID, subscriptionNotifications)
+    },[subscriptionNotifications])
 
     return (
         <Fragment>
@@ -136,6 +147,7 @@ export const Home = () => {
             <div id="observer" ref={elementRef}></div>
         </Fragment>
     )
+
 
 }
 

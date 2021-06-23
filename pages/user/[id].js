@@ -7,6 +7,7 @@ import { Logout_icon, Add_icon, Wall_icon, Wall_icon_selected, Bookmark_icon, Bo
 import router, { useRouter } from 'next/router'
 import Link from 'next/link'
 import Loadingbar from 'react-multicolor-loading-bar'
+import { sendNotification } from 'services/notifications'
 
 const ModalWindow = lazy(() => import('components/ModalWindow'))
 const Wallphoto = lazy(() => import('components/Wallphoto'))
@@ -59,10 +60,11 @@ const User = () => {
         SetSelectedOption(option)
     }
 
-    const handleFollow = (e, userFollowed, privacy) => {
+    const handleFollow = async (e, userFollowed, privacy) => {
         //COMPROBAR PRIVACIDAD DEL POSIBLE FOLLOW PARA VER SI AGREGO O NO A MIS FOLLOWS
         if(!privacy){
             UpdatefollowUser(userAct.userID, userFollowed);
+            await sendNotification({title: "Notificacion de Amistad", message: `${userAct.userName} Te esta siguiendo.`}, JSON.parse(user.subscriptionNotifications))
         }else{
             setFollowRequest(true)
             sendFollowRequest(userFollowed, userAct.userID, userAct.userName, userAct.displayName, userAct.avatar, userAct.filter ).then(res => {
@@ -146,6 +148,7 @@ const User = () => {
         if(postComments.length){
             setidPostsComments(postComments)
         }
+
     },[])
 
     useEffect(() =>{
@@ -153,7 +156,6 @@ const User = () => {
             getCommentsbyPostArray(idPostsComments, setcommentsPosts)
         }
     },[])
-    
 
     return (
         <Fragment>
