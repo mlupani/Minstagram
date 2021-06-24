@@ -64,7 +64,12 @@ const User = () => {
         //COMPROBAR PRIVACIDAD DEL POSIBLE FOLLOW PARA VER SI AGREGO O NO A MIS FOLLOWS
         if(!privacy){
             UpdatefollowUser(userAct.userID, userFollowed);
-            await sendNotification({title: "Notificacion de Amistad", message: `${userAct.userName} Te esta siguiendo.`}, JSON.parse(user.subscriptionNotifications))
+            await sendNotification({
+                title: "Notificacion de seguimiento",
+                message: `${userAct.userName} te esta siguiendo.`,
+                icon: userAct.avatar,
+                data: { url: window.location.origin+'/actividad/' },
+                actions: [{action: "follow", title: "Notificacion de seguimiento"}]},JSON.parse(user.subscriptionNotifications))
         }else{
             setFollowRequest(true)
             sendFollowRequest(userFollowed, userAct.userID, userAct.userName, userAct.displayName, userAct.avatar, userAct.filter ).then(res => {
