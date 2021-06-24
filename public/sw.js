@@ -7,7 +7,7 @@ self.addEventListener('push', e => {
     icon: data.icon,
     data: data.data,
     actions: data.actions,
-    vibrate: 4
+    vibrate: [200,400,200]
   })
 })
 
