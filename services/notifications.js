@@ -36,14 +36,20 @@ export const sendNotification = async (payload, subscription) => {
 
     console.log(window.location.origin+'/api/notifications')
 
-    await fetch(window.location.origin+'/api/notifications', {
-        method: "POST",
-        payload: JSON.stringify(payload),
-        body: JSON.stringify(body),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
+    try {
+
+        await fetch(window.location.origin+'/api/notifications', {
+            method: "POST",
+            payload: JSON.stringify(payload),
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
 
 
 }
