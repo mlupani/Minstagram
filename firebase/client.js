@@ -653,14 +653,14 @@ export const updateSubscriptionNotifications = (doc, subscription) => {
     });
 }
 
-export const sendFollowRequest = (toUserID, fromUserID, fromUsername, fromDisplayName, fromAvatar, filterAvatar) => {
+export const sendFollowRequest = (toUserID, fromUserID, fromUsername, fromDisplayName, fromAvatar, filterAvatar, view=false) => {
     return db.collection("followRequests").add({
         toUserID,
         fromUserID,
         fromUsername,
         fromDisplayName,
         fromAvatar,
-        view: false,
+        view: view,
         acceptedAt: firebase.firestore.Timestamp.fromDate(new Date()),
         notif: false,
         fromAvatarFilter: filterAvatar
@@ -774,7 +774,6 @@ export const getRequestbyUser = (fromUserID, toUserID, callback) => {
     .collection("followRequests")
     .where("fromUserID", "==", fromUserID)
     .where("toUserID", "==", toUserID)
-    .where("view", "==", false)
     .onSnapshot(({ docs }) => {
         const res = docs.map(doc =>{
             const data = doc.data()
@@ -854,7 +853,7 @@ export const getRequestbyUserNotif = (toUserID, callback) => {
     return db
     .collection("followRequests")
     .where("toUserID", "==", toUserID)
-    .where("view", "==", false)
+    //.where("view", "==", false)
     .where("notif", "==", false)
     .onSnapshot(({ docs }) => {
         if(!docs.length) callback([])
@@ -1331,6 +1330,18 @@ export const getUserByDoc = (doc,callback) => {
     .onSnapshot((doc) => {
         const user = { ...doc.data(), userID: doc.id}
         callback(user)
+    })
+
+}
+
+export const getUserByDoc_2 = async (doc,callback) => {
+
+    return db
+    .collection("users")
+    .doc(doc)
+    .get()
+    .then((doc) => {
+        return doc.data()
     })
 
 }

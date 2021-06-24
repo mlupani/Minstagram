@@ -97,7 +97,7 @@ const Activity = ({activity, handleFollow, setModalShow, setNameModal, setAvatar
                         <div className="col-2" style={{"width":"45px","height":"45px"}} onClick={()=>router.push(`/status/[id]`,`/status/${activity.idPost}`)}>
                             <figure className={`filter-${activity.img[0].filterApplied}`}><img  style={{"objectFit": "cover", "width":"45px", "height":"45px"}}  src={activity.img[0].img}></img></figure>
                         </div>:
-                        user?.followsCount.includes(activity.fromUsername)?
+                        user?.followsCount.includes(activity.fromUserID)?
                             <div className="col-2" style={{"width":"45px","height":"45px"}} >
                                 <button onClick={() => handleModal(activity.fromUsername, activity.avatarLike?activity.avatarLike:activity.avatar?activity.avatar:activity.fromAvatar, activity.avatarLikeFilter?activity.avatarLikeFilter:activity.filterAvatar?activity.filterAvatar:activity.fromAvatarFilter, activity.fromUserID, activity.id)} style={{"border":"1px solid gainsboro"}} className="btn btn-light btn-sm">Siguiendo</button>
                             </div>
@@ -107,12 +107,13 @@ const Activity = ({activity, handleFollow, setModalShow, setNameModal, setAvatar
                                     <div className="col-2" style={{"width":"45px","height":"45px"}} >
                                         <button style={{"marginTop":"5px", "border":"1px solid gainsboro"}} onClick={() => handleModal(activity.fromUsername, activity.avatarLike?activity.avatarLike:activity.avatar?activity.avatar:activity.fromAvatar, activity.avatarLikeFilter?activity.avatarLikeFilter:activity.filterAvatar?activity.filterAvatar:activity.fromAvatarFilter, activity.fromUserID, activity.id)} className="btn btn-light btn-sm">Pendiente</button>
                                     </div>:
+                                            user?.followsCount.includes(activity.fromUserID)?
                                     <div className="col-2" style={{"width":"45px","height":"45px","marginTop":"5px"}} >
                                         <button onClick={() => handleModal(activity.fromUsername, activity.avatarLike?activity.avatarLike:activity.avatar?activity.avatar:activity.fromAvatar, activity.avatarLikeFilter?activity.avatarLikeFilter:activity.filterAvatar?activity.filterAvatar:activity.fromAvatarFilter, activity.fromUserID, activity.id)} style={{"border":"1px solid gainsboro"}} className="btn btn-light btn-sm">Siguiendo</button>
                                     </div>
                                 :<div className="col-2" style={{"width":"45px","height":"45px"}} >
                                     <button style={{"backgroundColor":"rgba(var(--d69,0,149,246),1)","border":"rgba(var(--d69,0,149,246),1)","marginTop":"5px"}} onClick={e =>handleFollow(e, activity.fromUserID, userActivity.private)} className="btn btn-primary btn-sm">Seguir</button>
-                                </div>
+                                </div>:''
                 }
 
             </div>

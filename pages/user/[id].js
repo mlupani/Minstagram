@@ -64,12 +64,19 @@ const User = () => {
         //COMPROBAR PRIVACIDAD DEL POSIBLE FOLLOW PARA VER SI AGREGO O NO A MIS FOLLOWS
         if(!privacy){
             UpdatefollowUser(userAct.userID, userFollowed);
-            await sendNotification({
-                title: "Notificacion de seguimiento",
-                message: `${userAct.userName} te esta siguiendo.`,
-                icon: userAct.avatar,
-                data: { url: window.location.origin+'/actividad/' },
-                actions: [{action: "follow", title: "Notificacion de seguimiento"}]},JSON.parse(user.subscriptionNotifications))
+            sendFollowRequest(userFollowed, userAct.userID, userAct.userName, userAct.displayName, userAct.avatar, userAct.filter, true  ).then(async res => {
+                await sendNotification
+                (
+                    {
+                        title: "Tienes un nuevo seguidor",
+                        message: `${userAct.userName} te esta siguiendo.`,
+                        icon: userAct.avatar,
+                        data: { url: window.location.origin+'/actividad/' },
+                        actions: [{action: "follow", title: "Notificacion de seguimiento"}]
+                    },
+                    JSON.parse(user.subscriptionNotifications)
+                )
+            })
         }else{
             setFollowRequest(true)
             sendFollowRequest(userFollowed, userAct.userID, userAct.userName, userAct.displayName, userAct.avatar, userAct.filter ).then(res => {
@@ -82,6 +89,7 @@ const User = () => {
 
         if(requested){
             removeFollowRequest(requested).then(() =>{
+                RemovefollowUser(userAct.userID, userFollowed);
                 setModalShow(false)
             })
         }
@@ -213,7 +221,7 @@ const User = () => {
                                         </Suspense>
                                     </Fragment>
                                     :
-                                    requestSended?.toUserID?
+                                    !requestSended?.view && requestSended && user.privacy?
                                     <div style={{"textAlign":"center"}} className="col-11" >
                                         <button style={{"width":"100%","padding":"0px","border":"1px solid gainsboro"}} onClick={() => setModalShow(true)} className="btn btn-sm btn-light">Solicitado</button>
                                         <Suspense fallback={'cargando...'}>

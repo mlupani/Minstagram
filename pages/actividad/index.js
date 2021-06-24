@@ -3,10 +3,11 @@ import useUser from 'hooks/useUser'
 import Activity from 'components/Activity'
 import styles from 'styles/Search.module.css'
 import { useState, useEffect, Fragment } from 'react'
-import { getActivity, getRequestbyUserPendings, removeFollowRequest, updateFollowRequest, UpdatefollowUser, updateFollowRequestNotif, getRequestbyUserAccepted, sendFollowRequest, RemovefollowUser } from 'firebase/client'
+import { getActivity, getRequestbyUserPendings, removeFollowRequest, updateFollowRequest, UpdatefollowUser, updateFollowRequestNotif, getRequestbyUserAccepted, sendFollowRequest, RemovefollowUser, getUserByDoc_2 } from 'firebase/client'
 import { Arrow_icon, Fav_icon, Circle_selected, Chevron } from 'components/icons'
 import { useRouter } from 'next/router'
 import ModalWindow from 'components/ModalWindow'
+import { sendNotification } from 'services/notifications'
 
 const Actividad = () => {
 
@@ -86,6 +87,13 @@ const Actividad = () => {
         }
     },[requests])
 
+    useEffect(() =>{
+        if(requestsAccepted){
+            setIsLoading(false)
+            requestsAccepted.map(req => updateFollowRequestNotif(req.id))
+        }
+    },[requestsAccepted])
+
     const handleCancelFollow = reqID => {
         removeFollowRequest(reqID)
         setCheckRequest(false)
@@ -101,6 +109,20 @@ const Actividad = () => {
         //COMPROBAR PRIVACIDAD DEL POSIBLE FOLLOW PARA VER SI AGREGO O NO A MIS FOLLOWS
         if(!privacy){
             UpdatefollowUser(user.userID, userFollowed);
+            sendFollowRequest(userFollowed, user.userID, user.userName, user.displayName, user.avatar, user.filter, true  ).then(async res => {
+                const userNotif = await getUserByDoc_2(userFollowed);
+                await sendNotification
+                (
+                    {
+                        title: "Tienes un nuevo seguidor",
+                        message: `${user.userName} te esta siguiendo.`,
+                        icon: user.avatar,
+                        data: { url: window.location.origin+'/actividad/' },
+                        actions: [{action: "follow", title: "Notificacion de seguimiento"}]
+                    },
+                    JSON.parse(userNotif.subscriptionNotifications)
+                )
+            })
         }else{
             setFollowRequest(true)
             sendFollowRequest(userFollowed, user.userID, user.userName, user.displayName, user.avatar, user.filter ).then(res => {
