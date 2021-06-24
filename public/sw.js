@@ -3,15 +3,15 @@ console.log("Hello world from the Service Worker 🤙");
 self.addEventListener('push', e => {
   const data = e.data.json()
 
-    navigator.serviceWorker.ready.then(() => {
-      self.registration.showNotification(data.title, {
+  e.waitUntil(
+    self.registration.showNotification(data.title, {
         body: data.message,
         icon: data.icon,
         data: data.data,
         actions: data.actions,
         vibrate: [200, 100, 200, 100, 200, 100, 200],
       })
-    })
+  )
 })
 
 self.addEventListener('notificationclick', event =>  {
