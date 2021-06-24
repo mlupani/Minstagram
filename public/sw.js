@@ -4,12 +4,14 @@ self.addEventListener('push', e => {
   const data = e.data.json()
 
   if(data.title){
-    self.registration.showNotification(data.title, {
-      body: data.message,
-      icon: data.icon,
-      data: data.data,
-      actions: data.actions,
-      vibrate: [200,400,200]
+    navigator.serviceWorker.ready.then(registration => {
+      registration.showNotification(data.title, {
+        body: data.message,
+        icon: data.icon,
+        data: data.data,
+        actions: data.actions,
+        vibrate: [200, 100, 200, 100, 200, 100, 200],
+      })
     })
   }
 })
