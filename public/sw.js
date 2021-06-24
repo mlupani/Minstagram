@@ -2,13 +2,16 @@ console.log("Hello world from the Service Worker 🤙");
 
 self.addEventListener('push', e => {
   const data = e.data.json()
-  self.registration.showNotification(data.title, {
-    body: data.message,
-    icon: data.icon,
-    data: data.data,
-    actions: data.actions,
-    vibrate: [200,400,200]
-  })
+
+  if(data.title){
+    self.registration.showNotification(data.title, {
+      body: data.message,
+      icon: data.icon,
+      data: data.data,
+      actions: data.actions,
+      vibrate: [200,400,200]
+    })
+  }
 })
 
 self.addEventListener('notificationclick', event =>  {
