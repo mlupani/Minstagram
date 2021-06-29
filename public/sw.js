@@ -18,6 +18,7 @@ self.addEventListener('notificationclick', event =>  {
 
   switch(event.notification.actions[0].action){
     case 'follow':
+    case 'message':
       clients.openWindow(event.notification.data.url);
       event.notification.close();
     break;
