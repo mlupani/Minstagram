@@ -125,7 +125,19 @@ const Actividad = () => {
             })
         }else{
             setFollowRequest(true)
-            sendFollowRequest(userFollowed, user.userID, user.userName, user.displayName, user.avatar, user.filter ).then(res => {
+            sendFollowRequest(userFollowed, user.userID, user.userName, user.displayName, user.avatar, user.filter ).then(async res => {
+                const userNotif = await getUserByDoc_2(userFollowed);
+                await sendNotification
+                (
+                    {
+                        title: "Tienes un nuevo seguidor",
+                        message: `${user.userName} te esta siguiendo.`,
+                        icon: user.avatar,
+                        data: { url: window.location.origin+'/actividad/' },
+                        actions: [{action: "follow", title: "Notificacion de seguimiento"}]
+                    },
+                    JSON.parse(userNotif.subscriptionNotifications)
+                )
                 setFollowRequest(false)
             })
         }

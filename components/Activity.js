@@ -58,6 +58,8 @@ const Activity = ({activity, handleFollow, setModalShow, setNameModal, setAvatar
         setModalShow(true)
     }
 
+    console.log(requestSended)
+
     if(activity && user && typeof requestSended != "undefined")
         return (
             <div className="row" key={activity.id}>

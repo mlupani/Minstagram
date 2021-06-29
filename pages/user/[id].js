@@ -13,19 +13,6 @@ const ModalWindow = lazy(() => import('components/ModalWindow'))
 const Wallphoto = lazy(() => import('components/Wallphoto'))
 const Card = lazy(() => import('components/Card'))
 
-/*
-const Loadingbar = lazy(() => import('react-multicolor-loading-bar'))
-*/
-
-
-
-/*
-import Wallphoto from 'components/Wallphoto'
-import Card from 'components/Card'
-import Loadingbar from 'react-multicolor-loading-bar'
-import ModalWindow from 'components/ModalWindow'
-*/
-
 const options = {
     wall: 1,
     posts: 2,
@@ -79,8 +66,19 @@ const User = () => {
             })
         }else{
             setFollowRequest(true)
-            sendFollowRequest(userFollowed, userAct.userID, userAct.userName, userAct.displayName, userAct.avatar, userAct.filter ).then(res => {
+            sendFollowRequest(userFollowed, userAct.userID, userAct.userName, userAct.displayName, userAct.avatar, userAct.filter ).then(async res => {
                 setFollowRequest(false)
+                await sendNotification
+                (
+                    {
+                        title: "Nueva solicitud de amistad",
+                        message: `${userAct.userName} quiere seguirte.`,
+                        icon: userAct.avatar,
+                        data: { url: window.location.origin+'/actividad/' },
+                        actions: [{action: "follow", title: "Notificacion de seguimiento"}]
+                    },
+                    JSON.parse(user.subscriptionNotifications)
+                )
             })
         }
     }
@@ -170,6 +168,12 @@ const User = () => {
         }
     },[])
 
+    useEffect(() =>{
+        if(Array.isArray(requestSended) && !requestSended.length)
+            setRequestSended(null)
+    }, [requestSended])
+    
+
     return (
         <Fragment>
             <Head>
@@ -221,7 +225,7 @@ const User = () => {
                                         </Suspense>
                                     </Fragment>
                                     :
-                                    !requestSended?.view && requestSended && user.privacy?
+                                    !requestSended?.view && requestSended && user.private?
                                     <div style={{"textAlign":"center"}} className="col-11" >
                                         <button style={{"width":"100%","padding":"0px","border":"1px solid gainsboro"}} onClick={() => setModalShow(true)} className="btn btn-sm btn-light">Solicitado</button>
                                         <Suspense fallback={'cargando...'}>
@@ -242,6 +246,10 @@ const User = () => {
                                     !requestSended?.view && requestSended?
                                     <div style={{"textAlign":"center"}} className="col-11" >
                                         <button style={{"width":"100%","padding":"0px"}} onClick={e =>handleFollow(e, user.userID, user.private)} className="btn btn-sm btn-primary">{FollowRequest?'Enviando Solicitud...':'Seguir'}</button>
+                                    </div>:
+                                    !requestSended?
+                                    <div style={{"textAlign":"center"}} className="col-11" >
+                                        <button style={{"width":"100%","padding":"0px"}} onClick={e =>handleFollow(e, user.userID, user.private)} className="btn btn-sm btn-primary">Seguir</button>
                                     </div>:
                                     <div style={{"textAlign":"center"}} className="col-12" ><img width="42" height="42" src='/loading.gif'></img></div>
                                 }

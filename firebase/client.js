@@ -511,7 +511,7 @@ export const getPostsLikesCommentsbyUser = (userID, callback) => {
     })
 }
 
-export const getChat = (chatName, callback, docRef, setDocRef, setLoadingPage, setCountResults) => {
+export const getChat = (chatName, callback, docRef, setDocRef, setLoadingPage, setCountResults, setScrolling) => {
 
     if(docRef != null)
         setLoadingPage(true)
@@ -534,6 +534,7 @@ export const getChat = (chatName, callback, docRef, setDocRef, setLoadingPage, s
             return [...chat, ...newChat]
         })
 
+        setScrolling(true)
         setCountResults(docs.length)
         setDocRef(docs[docs.length-1])
         setLoadingPage(false)
@@ -547,24 +548,38 @@ export const getChatListen = (chatName, callback, docRef, setDocRef, setLoadingP
     .orderBy("createdAt", "desc")
     .limit(10)
     .onSnapshot((snapshot) => {
+
+        let newDocs = []
         snapshot.docChanges().forEach((change) => {
+
             if (change.type === "added") {
                 const doc = [change.doc.data()]
-                doc[0].id = change.doc.id
+                const data = doc[0]
+                const id = change.doc.id
+                const createdAt = doc[0].createdAt
 
-                if(snapshot.docChanges().length == 10){
+                const newDoc = {
+                    ...data,
+                    id,
+                    createdAt: +createdAt.toDate()
+                }
+
+                newDocs.push(newDoc)
+
+                if(snapshot.docChanges().length > 9){
                     setDocRef(change.doc)
-                    setCountResults(snapshot.docChanges().length)
-                    callback(prevState => [...doc ,...prevState])
+                    setScrolling(true)
                 }
 
-                if(snapshot.docChanges().length == 2){
-                    setCountResults(prevState => prevState+1)
-                    setScrolling(false)
-                    callback(prevState => [...prevState ,...doc])
-                }
+                setCountResults(prevState => prevState+1)
+
             }
+
         });
+
+        //LOS ORDENO AL REVEZ
+        newDocs.sort((a,b)=> a.createdAt - b.createdAt)
+        callback(prevState => [...prevState ,...newDocs])
     })
 }
 

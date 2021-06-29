@@ -8,6 +8,7 @@ import styles from 'styles/Chat.module.css'
 import useNearScreen from 'hooks/useNearScreen'
 import Message from 'components/Message'
 import debounce from "just-debounce-it";
+import { sendNotification } from 'services/notifications'
 
 const Chat = () => {
 
@@ -28,10 +29,12 @@ const Chat = () => {
     const {isNearScreen, elementRef} = useNearScreen({distance: '100px', once})
     const references = useRef(new Array())
     const [countResults, setCountResults] = useState(0)
-    const [scrolling, setScrolling] = useState(true)
+    const [scrolling, setScrolling] = useState(false)
+    const [countMessagesSended, setCountMessagesSended] = useState(1)
+    const [timeOut, setTimeOut] = useState()
 
     const debounceSetIsPage = useCallback(debounce(() => setIsPage(prevState => prevState+1),200));
-    const debounceGetChat = useCallback(debounce(() => getChat(nameChat, setChat, docRef, setDocRef, setLoadingPage, setCountResults),200));
+    const debounceGetChat = useCallback(debounce(() => getChat(nameChat, setChat, docRef, setDocRef, setLoadingPage, setCountResults,setScrolling),200));
     const debounceGetChatNew = useCallback(debounce(() => getChatListen(nameChat, setChat, docRef, setDocRef, setLoadingPage, setCountResults, countResults, user, setScrolling),200));
 
     useEffect(() => {
@@ -74,7 +77,7 @@ const Chat = () => {
     useEffect(() =>{
         if(user && userChat)
         {
-            setScrolling(true)
+            //setScrolling(true)
             debounceGetChat()
         }
     },[isPage])
@@ -92,9 +95,36 @@ const Chat = () => {
     const handleSendMessage = () => {
         setMessage('')
         setVistoHace('')
+        setScrolling(false)
         addMessageToChat(message, user, userChat, nameChat).then(() => {
 
+            setCountMessagesSended(prevState => prevState + 1)
+            let tiempo = 10000
+
+            clearTimeout(timeOut)
+
+            //MANEJO DE NOTIFICACIONES
+            setTimeOut(setTimeout(async () => {
+                let title = ''
+                if(countMessagesSended > 1 ) title = `Tienes ${countMessagesSended} nuevos mensajes de ${user.userName}`
+                else title = `Tienes ${countMessagesSended} nuevo mensaje de ${user.userName}`
+                await sendNotification
+                (
+                    {
+                        title: title,
+                        message: `${message}`,
+                        icon: user.avatar,
+                        data: { url: window.location.origin+'/chat/'+user.userID },
+                        actions: [{action: "message", title: "Nuevos mensajes"}]
+                    },
+                    JSON.parse(userChat.subscriptionNotifications)
+                )
+                setCountMessagesSended(1)
+            },tiempo))
+
+
             scroll.current.scrollIntoView()
+            setScrolling(true)
 
             if(!user.chats.includes(userChat.userID))
                 addChattoUser(user.userID, userChat.userID)
@@ -105,16 +135,16 @@ const Chat = () => {
     }
 
     useEffect(() =>{
-        if(scroll.current && chat.length && (isPage == 1 || !scrolling)){
+        if(scroll.current && chat.length && isPage == 1){
             scroll.current.scrollIntoView()
         }
     },[scroll.current, chat])
 
     useEffect(() =>{
         if(references.current && countResults && isPage > 1 && scrolling){
-            references.current[countResults].scrollIntoView()
+            references.current[docRef.id].scrollIntoView()
         }
-    },[references.current, chat])
+    },[chat])
 
     return (
         <Fragment>
@@ -146,7 +176,7 @@ const Chat = () => {
                             </div>
                             {
                                 chat.length?
-                                    chat.map((message, index) => <div className={message.id} key={message.id} ref={(element) => references.current[index] = element}><Message updateMesageViewAt={updateMesageViewAt} setVistoHace={setVistoHace} index={index} countMessages={chat.length} message={message} contador={contador} setContador={setContador} nameChat={nameChat} user={user} /></div>)
+                                    chat.map((message, index) => <div id={index}  className={message.id} key={message.id} ref={(element) => references.current[message.id] = element}><Message updateMesageViewAt={updateMesageViewAt} setVistoHace={setVistoHace} index={index} countMessages={chat.length} message={message} contador={contador} setContador={setContador} nameChat={nameChat} user={user} /></div>)
                                     :
                                     !chat.length?'':''
                             }
