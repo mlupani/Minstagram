@@ -557,11 +557,13 @@ export const getChatListen = (chatName, callback, docRef, setDocRef, setLoadingP
                 const data = doc[0]
                 const id = change.doc.id
                 const createdAt = doc[0].createdAt
+                const viewAt = doc[0].viewAt
 
                 const newDoc = {
                     ...data,
                     id,
-                    createdAt: +createdAt.toDate()
+                    createdAt: +createdAt.toDate(),
+                    viewAt: +viewAt.toDate()
                 }
 
                 newDocs.push(newDoc)
