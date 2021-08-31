@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Login from 'components/Login'
-import Mobiles from 'components/mobiles'
+import Mobiles from 'components/Mobiles'
 import styles from "styles/Mobiles.module.css";
 import useUser from 'hooks/useUser';
 import router from "next/router";
