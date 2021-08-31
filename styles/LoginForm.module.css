@@ -63,12 +63,16 @@
   color:#262626;
   flex-grow:1;
   justify-content: center;
-  max-width: 350px;
   margin-top:12px;
   -webkit-box-pack: justify;
     -moz-box-pack: justify;
   -webkit-box-flex: 1;
     -moz-box-flex: 1;  
+}
+
+.loginForm{
+  margin-left:20px;
+  width: 350px
 }
 
 .loginBox {
@@ -301,6 +305,10 @@
     min-width: auto;
     -webkit-box-pack: center;
     -moz-box-pack: center;
+  }
+  .loginForm{
+    width:100%;
+    margin-left: 0px;
   }
 
 }

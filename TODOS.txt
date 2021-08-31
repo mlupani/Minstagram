@@ -1,4 +1,4 @@
-agregar font
+arreglar la home para movil
 boton de seguir de sugerencias que funcione
 notificaciones en header (context?)
 inicio de sesion con facebook en online

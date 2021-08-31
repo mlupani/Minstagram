@@ -94,11 +94,10 @@ const Login = () => {
 				</div>
 			)}
 			<div
+				className={styles.loginForm}
 				style={{
                     marginTop: "10px",
-					width: "350px",
 					justifyContent: "start",
-					marginLeft: "10px",
 				}}
 			>
 				<span className={styles.componentsElements}>

@@ -1,2 +1,2 @@
-WEB: https://minstagram.vercel.app/home
+WEB: https://minstagram.vercel.app
 Github: https://github.com/mlupani/Minstagram
