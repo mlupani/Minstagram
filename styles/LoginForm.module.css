@@ -72,7 +72,9 @@
 
 .loginForm{
   margin-left:20px;
-  width: 350px
+  width: 350px;
+  margin-top: 10px;
+  justify-Content: start;
 }
 
 .loginBox {
@@ -309,6 +311,13 @@
   .loginForm{
     width:100%;
     margin-left: 0px;
+    margin-top: 10px;
+  }
+  .header{
+    border: none;
+  }
+  .loginBox{
+    border:none;
   }
 
 }

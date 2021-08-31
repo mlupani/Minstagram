@@ -1,3 +1,4 @@
+boton salir en movil
 arreglar la home para movil
 boton de seguir de sugerencias que funcione
 notificaciones en header (context?)
