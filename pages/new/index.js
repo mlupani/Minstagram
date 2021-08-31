@@ -1,6 +1,6 @@
+import React, { useEffect, useState, Fragment, useRef } from 'react'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
 import Head from 'next/head'
-import { useEffect, useState, Fragment, useRef } from 'react'
 import { addPost, handleInputFile } from 'firebase/client.js'
 import styles from 'styles/New.module.css'
 import { Arrow_icon } from 'components/icons'
@@ -8,49 +8,37 @@ import router from 'next/router'
 import useUser from 'hooks/useUser'
 import Loadingbar from 'react-multicolor-loading-bar'
 import { Carousel } from 'react-responsive-carousel'
+import useLocation from 'hooks/useLocation'
 
 const New = () => {
 
+    const { selectedPlace, handleRemovePlace } = useLocation();
     const user = useUser()
     const [uploadedImg, setUploadedImg] = useState(null)
     const [message, setMessage] = useState('')
     const [statePost, setStatePost] = useState('')
-    const [selectedPlace, setSelectedPlace] = useState('');
-    const [placeLoaded, setPlaceLoaded] = useState(null);
     const [focusTextArea, setfocusTextArea] = useState(false)
     const textareaRef = useRef()
-    const [filter, setFilter] = useState('')
 
     useEffect(() =>{
-
-
-        if(localStorage.getItem("imgUpload")){
-            const imgs = JSON.parse(localStorage.getItem("imgUpload"))
+        if(window.localStorage.getItem("imgUpload")){
+            const imgs = JSON.parse(window.localStorage.getItem("imgUpload"));
             setUploadedImg(imgs)
         }
         else
             setUploadedImg(1);
-
-        if(localStorage.getItem("placeSelected") && !placeLoaded){
-            setSelectedPlace(localStorage.getItem("placeSelected"))
-            setPlaceLoaded(1)
-        }
 
         if(textareaRef && textareaRef.current){
             textareaRef.current.addEventListener("focus",() => setfocusTextArea(true), false)
             textareaRef.current.addEventListener("blur",() => setfocusTextArea(false), false)
         }
 
-        if(localStorage.getItem("imgFilter"))
-            setFilter(localStorage.getItem("imgFilter"))
-
         return () => {
             textareaRef && textareaRef.current && textareaRef.current.removeEventListener("focus", setfocusTextArea(false), false);
         }
-
     },[])
 
-    const handleSubmit = async e => {
+    const handleSubmit = async () => {
 
         setStatePost(1)
         const arrayImgs = await handleInputFile(uploadedImg)
@@ -63,14 +51,9 @@ const New = () => {
             userName: user.userName,
             place: selectedPlace,
         }).then(() => {
-            localStorage.removeItem("placeSelected");
+            window.localStorage.removeItem("placeSelected");
             router.push("home")
         })
-    }
-
-    const handleRemovePlace = e => {
-        localStorage.removeItem("placeSelected");
-        setSelectedPlace('')
     }
 
     if(uploadedImg == 1) router.push("/home")
@@ -129,7 +112,7 @@ const New = () => {
             <div className="row">
                 <div className="col-12"><br></br>
                     {
-                        !selectedPlace ? <button onClick={()=>router.push("/ubicacion")} type="button" className="btn btn-light" style={{"textAlign":"left", "width":"100%","border":"1px solid lightgrey", "fontSize":"11px"}}>Agregar ubicaci&oacute;n <span style={{"float":"right"}}>&gt;</span></button>:
+                        !selectedPlace ? <button onClick={()=>router.push("ubicacion")} type="button" className="btn btn-light" style={{"textAlign":"left", "width":"100%","border":"1px solid lightgrey", "fontSize":"11px"}}>Agregar ubicaci&oacute;n <span style={{"float":"right"}}>&gt;</span></button>:
                         (
                         <div className="col-12">
                             <div style={{"border":"1px solid lightgrey"}} className="gap-2 d-md-block"><button style={{"textAlign":"right","float":"right","paddingBottom":"15px"}} type="button"

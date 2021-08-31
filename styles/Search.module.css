@@ -48,3 +48,24 @@
   height: 40px;
   border-radius: 50%;
 }
+
+.rowWallPhoto{
+    justify-Content: center
+}
+
+.containerWallPhoto{
+
+}
+
+
+@media (max-width: 875px) {
+  .bg{
+      padding-bottom: 100%;
+  }
+  .rowWallPhoto{
+    justify-Content: flex-start
+    }
+.containerWallPhoto{
+    width: 100% !important;
+}
+}

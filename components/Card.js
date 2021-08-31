@@ -1,5 +1,5 @@
-import { useState,  useEffect } from 'react'
-import { UpdateLikeCountPost, addPostToFav, removePostToFav, addPostToSaves, removePostSaves, deletePost, getCommentsLikesbyPost, RemovefollowUser,deleteImage, getLikesByPost, getCommentsByPost } from 'firebase/client'
+import React, { useState,  useEffect } from 'react'
+import { addPostToFav, removePostToFav, addPostToSaves, removePostSaves, deletePost, getCommentsLikesbyPost, RemovefollowUser,deleteImage, getLikesByPost, getCommentsByPost, getPostbyID } from 'firebase/client'
 import useTimeAgo from 'hooks/useTimeAgo'
 import Link from 'next/link'
 import styles from 'styles/Card.module.css'
@@ -11,11 +11,15 @@ import router from 'next/router'
 import useUser from 'hooks/useUser'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
 import { Carousel } from 'react-responsive-carousel'
+import useComments from 'hooks/useComments'
+import useDevice from "hooks/useDevice";
 
 const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser, comments, place, savesUser, actualUserID, filter }) => {
 
     const user = useUser();
     const timeAgo = useTimeAgo(createdAt)
+    const isMobile = useDevice();
+    const {comentario, setComentario, stateComment, addComments} = useComments();
     const [IDfav, setIDfav] = useState('')
     const [stateFav, setStateFav] = useState('')
     const [viewDesc, setViewDesc] = useState(false)
@@ -24,6 +28,7 @@ const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser,
     const [postLikesComments, setPostLikesComments] = useState('')
     const [likeCount, setLikeCount] = useState([])
     const [commentCount, setCommentCount] = useState([])
+    const [postAct, setPostAct] = useState('')
 
     useEffect(() => {
 
@@ -55,7 +60,15 @@ const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser,
 
     },[likesUser, stateFav, savesUser])
 
-    const favDoubleTap = useDoubleTap((event) => {
+    useEffect(() => {
+        let unsubscribePost
+        if(user){
+            unsubscribePost = getPostbyID(id,setPostAct);
+        }
+        return () => unsubscribePost && unsubscribePost()
+    }, [user]);
+
+    const favDoubleTap = useDoubleTap(() => {
 
         setStateFav(1)
         setTimeout(() => {
@@ -127,10 +140,10 @@ const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser,
 
     return (
         <div className="row justify-content-center">
-           <div className="col col-lg-7" style={{"paddingRight":"0px"}}>
+           <div className={styles.flexCol} style={{"paddingRight":"0px"}}>
                 <div className={`${styles.card}`} style={{"paddingLeft":'0px',"paddingRight":'0px'}}>
                     <div className="card-header" >
-                        <div className="row justify-content-start">
+                        <div className={`${styles.rowContainer}`}>
                             <div className='col col-1' style={{"paddingLeft":"5px"}}>
                             <Link href={'/user/[id]'} as={`/user/${userID}`} >
                                 <a>
@@ -188,9 +201,15 @@ const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser,
                                     <a onClick={(e)=>handleLikeCount(e,'Add')} style={{"textDecoration":"none", "color":"black","cursor":"pointer","paddingRight": "12px"}}><Fav_icon/></a>
                                 }
 
-                                <Link href={`/comments/[id]`} as={`/comments/${id}`}>
-                                    <a style={{"textDecoration":"none", "color":"black"}}><Chat_icon/>&nbsp;&nbsp;</a>
-                                </Link>
+                                {
+                                    isMobile ?
+                                    <Link href={`/comments/[id]`} as={`/comments/${id}`}>
+                                        <a style={{"textDecoration":"none", "color":"black"}}><Chat_icon/>&nbsp;&nbsp;</a>
+                                    </Link> :
+                                    <Link href='/status/[id]' as={`/status/${id}`}>
+                                        <a style={{"textDecoration":"none", "color":"black"}}><Chat_icon/>&nbsp;&nbsp;</a>
+                                    </Link>
+                                }
 
                                 <Share_icon/>
                             </div>
@@ -208,7 +227,12 @@ const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser,
                             <span>{content.length > 90 && !viewDesc? (<>{content.substring(1,90)} <a onClick={()=>setViewDesc(true)}>...Ver Mas</a></>):content}</span>
                         </p>
                         {
-                            commentCount.length > 2? <Link href="/comments/[id]" as={`/comments/${id}`} ><p className="card-text text-muted" style={{"color":"gray", "marginBottom":"2px"}}>Ver los {commentCount.length} comentarios</p></Link>:''
+                            commentCount.length > 2?
+                            <Link href="/comments/[id]" as={`/comments/${id}`} >
+                                <p className="card-text text-muted" style={{"color":"gray", "marginBottom":"2px"}}>
+                                    Ver los {commentCount.length} comentarios
+                                </p>
+                            </Link>:''
                         }
                         {
                             comments && comments.map((comment, index) => {
@@ -243,7 +267,16 @@ const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser,
                         </Link>
                     </div>
 
-                    {/*<textarea onChange={(e) => setComentario(e.target.value)} placeholder="Escribir un comentario..." className="form-control">{comentario}</textarea>*/}
+                <div className={`row ${styles.flexComment}`} style={{height: '50px'}}>
+                    <div className="col-10">
+                        <textarea style={{height: '50px', 'borderRight': 'none', 'borderLeft': 'none', 'borderBottom': 'none', "resize" : "none", paddingTop: '10px'}} value={comentario} onChange={(e) => setComentario(e.target.value)} placeholder="Agrega un comentario..." className="form-control"></textarea>
+                    </div>
+                    <div className="col-2">
+                        <div  style={{"borderTop":"1px solid lightgrey","height":"50px","textAlign": 'center', 'justifyContent':'center', 'display':'flex'}} className="input-group-append">
+                            <button style={{"fontSize":"13px", 'alignSelf':'center', "textDecoration":"none"}} onClick={() => addComments(user, postAct, comentario, postAct)} disabled={!comentario || stateComment == 1?'disabled':''} className="btn btn-link" type="button">Publicar</button>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

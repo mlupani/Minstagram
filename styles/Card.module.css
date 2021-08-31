@@ -23,3 +23,26 @@
 .card{
   border:0 !important
 }
+
+.flexCol{
+  width: 600px;
+  height: auto;
+  border: 1px solid gainsboro;
+  margin-top: 65px;
+}
+
+.rowContainer{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+@media (max-width: 875px) {
+  .flexCol {
+    margin-top: 0px;
+    border: none;
+  }
+  .flexComment{
+    display: none;
+  }
+}

@@ -1,25 +1,24 @@
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Head from 'next/head'
-import { addComment, getCommentsbyPost, UpdateCommentCountPost, getPostbyID, getCommentsLikesbyPost, addCommentOfComment, getCommentsOfComment } from 'firebase/client.js'
+import { useRouter } from 'next/router'
+import { getCommentsbyPost, getPostbyID, getCommentsLikesbyPost, getCommentsOfComment } from 'firebase/client.js'
 import useUser from 'hooks/useUser'
+import useComments from 'hooks/useComments'
+import { Arrow_icon } from 'components/icons'
 import Comment from 'components/Comment'
 import styles from 'styles/Comments.module.css'
-import { Arrow_icon } from 'components/icons'
-import { useRouter } from 'next/router'
 
 const Comments = ({post}) => {
 
     const user = useUser()
+    const router = useRouter();
+    const {comentario, setComentario, stateComment, addComments} = useComments();
     const textAreaRef = useRef('');
-    const [comentario, setComentario] = useState('');
-    const [stateComnent, setStateComnent] = useState(null)
     const [comentarios, setComentarios] = useState([])
     const [postAct, setPostAct] = useState('')
     const [postLikesComments, setPostLikesComments] = useState('')
-    const router = useRouter();
     const [responseMode, setResponseMode] = useState('')
     const [commentsOfComments, setCommentsOfComments] = useState('')
-    const [infoPost, setInfoPost] = useState('')
 
     useEffect(() =>{
         let unsubscribe
@@ -30,7 +29,7 @@ const Comments = ({post}) => {
             unsubscribePost = getPostbyID(post.id,setPostAct);
             unsubscribepostLikesComments = getCommentsLikesbyPost(post.id, setPostLikesComments)
         }
-        return () => unsubscribe && unsubscribePost && unsubscribe() && unsubscribePost() && unsubscribepostLikesComments && unsubscribepostLikesComments()
+        return () => unsubscribe && unsubscribe() && unsubscribePost && unsubscribePost() && unsubscribepostLikesComments && unsubscribepostLikesComments()
     },[user])
 
      useEffect(()=>{
@@ -61,54 +60,7 @@ const Comments = ({post}) => {
         }
 
     },[responseMode])
-
-    const handleEvent = e => {
-
-        if(!responseMode)
-        {
-            setStateComnent(1)
-            addComment({
-                idPost: post.id,
-                comment: comentario,
-                avatar: user.avatar,
-                userID: user.userID,
-                userName: user.userName,
-                toUserID: postAct.userID,
-                img: postAct.img,
-                filter: postAct.filter
-            })
-            .then(() => {
-                UpdateCommentCountPost(post.id, 1)
-                setComentario('')
-                setStateComnent(null)
-            }).catch(err => {
-                console.log("error en el addComent "+err)
-            })
-        }
-        else{
-            setStateComnent(1)
-            addCommentOfComment({
-                idComment: responseMode.id,
-                comment: comentario,
-                avatar: user.avatar,
-                userID: user.userID,
-                userName: user.userName,
-                toUserName: responseMode.userName,
-                toUserID: responseMode.userID,
-                img: postAct.img,
-                filter: postAct.filter
-            })
-            .then(() => {
-                UpdateCommentCountPost(post.id, 1)
-                setComentario('')
-                setStateComnent(null)
-                setResponseMode('')
-            }).catch(err => {
-                console.log("error en el addComent "+err)
-            })
-        }
-    }
-
+    
     return (
         <>
         <Head>
@@ -128,7 +80,7 @@ const Comments = ({post}) => {
                 <div className="col-10" style={{"display":"flex"}}>
                     <textarea style={{"fontSize":"14px","resize":"none"}} ref={textAreaRef} value={comentario} onChange={e => setComentario(e.target.value)} className="form-control" rows="1" placeholder="Agrega un comentario..." aria-label="Comentario" aria-describedby="basic-addon2"></textarea>
                     <div style={{"border":"1px solid lightgrey","height":"38px"}} className="input-group-append">
-                        <button style={{"fontSize":"13px"}} onClick={handleEvent} disabled={!comentario || stateComnent == 1?'disabled':''} className="btn btn-link" style={{"textDecoration":"none"}} type="button">Publicar</button>
+                        <button style={{"fontSize":"13px", "textDecoration":"none"}} onClick={() => addComments(user, post, comentario, postAct)} disabled={!comentario || stateComment == 1?'disabled':''} className="btn btn-link" type="button">Publicar</button>
                     </div>
                 </div>
             </div>
@@ -170,9 +122,9 @@ const Comments = ({post}) => {
                     post={null}
                     likeCount={likeCount}
                     id={id}
-                    idPost={post.id}
+                    idPost={post?.id}
                     userID={user.userID}
-                    likeComment={postLikesComments? postLikesComments.filter(like => like.idPost == post.id):''}
+                    likeComment={postLikesComments? postLikesComments.filter(like => like.idPost == post?.id):''}
                     setResponseMode={setResponseMode}
                     filterAvatar={filterAvatar}
                     commentsOfComments={commentsOfComments?commentsOfComments.filter(comment => comment.idComment == id):''}

@@ -1,0 +1,9 @@
+.formEditUser{
+    padding: 10px 350px;
+}
+
+@media (max-width: 875px) {
+  .formEditUser {
+    padding: 10px 10px;
+  }
+}

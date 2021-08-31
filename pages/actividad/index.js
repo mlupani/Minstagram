@@ -1,13 +1,14 @@
+import React, { useState, useEffect, Fragment } from 'react'
 import Head from 'next/head'
-import useUser from 'hooks/useUser'
-import Activity from 'components/Activity'
-import styles from 'styles/Search.module.css'
-import { useState, useEffect, Fragment } from 'react'
-import { getActivity, getRequestbyUserPendings, removeFollowRequest, updateFollowRequest, UpdatefollowUser, updateFollowRequestNotif, getRequestbyUserAccepted, sendFollowRequest, RemovefollowUser, getUserByDoc_2 } from 'firebase/client'
-import { Arrow_icon, Fav_icon, Circle_selected, Chevron } from 'components/icons'
 import { useRouter } from 'next/router'
-import ModalWindow from 'components/ModalWindow'
+import { getActivity, getRequestbyUserPendings, removeFollowRequest, updateFollowRequest, UpdatefollowUser, updateFollowRequestNotif, getRequestbyUserAccepted, sendFollowRequest, RemovefollowUser, getUserByDoc_2 } from 'firebase/client'
 import { sendNotification } from 'services/notifications'
+import useUser from 'hooks/useUser'
+import { Arrow_icon, Fav_icon, Circle_selected, Chevron } from 'components/icons'
+import Activity from 'components/Activity'
+import ModalWindow from 'components/ModalWindow'
+import Header from "components/Header";
+import styles from 'styles/Search.module.css'
 
 const Actividad = () => {
 
@@ -16,7 +17,7 @@ const Actividad = () => {
     const [likes, setLikes] = useState([])
     const [comments, setComments] = useState([])
     const [commentsOfComments, setcommentsOfComments] = useState([])
-    const [activity, setActivity] = useState('')
+    const [activity, setActivity] = useState(null)
     const [categories, setCategories] = useState([])
     const [requests, setRequests] = useState('')
     const [requestsAccepted, setRequestsAccepted] = useState([])
@@ -58,7 +59,7 @@ const Actividad = () => {
         let categorias = []
         const date_now = Date.now()
 
-        if(activity.length)
+        if(activity?.length)
         {
             activity.sort((a,b)=> b.createdAt - a.createdAt)
             activity.map((act,index) => {
@@ -76,20 +77,25 @@ const Actividad = () => {
             })
 
             setCategories(categorias.sort(() => 0))
+            setIsLoading(false);
+        }
+
+        if(activity){
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 2000);
         }
 
     },[activity])
 
     useEffect(() =>{
         if(requests){
-            setIsLoading(false)
             requests.map(req => updateFollowRequestNotif(req.id))
         }
     },[requests])
 
     useEffect(() =>{
         if(requestsAccepted){
-            setIsLoading(false)
             requestsAccepted.map(req => updateFollowRequestNotif(req.id))
         }
     },[requestsAccepted])
@@ -109,10 +115,9 @@ const Actividad = () => {
         //COMPROBAR PRIVACIDAD DEL POSIBLE FOLLOW PARA VER SI AGREGO O NO A MIS FOLLOWS
         if(!privacy){
             UpdatefollowUser(user.userID, userFollowed);
-            sendFollowRequest(userFollowed, user.userID, user.userName, user.displayName, user.avatar, user.filter, true  ).then(async res => {
+            sendFollowRequest(userFollowed, user.userID, user.userName, user.displayName, user.avatar, user.filter, true  ).then(async () => {
                 const userNotif = await getUserByDoc_2(userFollowed);
-                await sendNotification
-                (
+                await sendNotification(
                     {
                         title: "Tienes un nuevo seguidor",
                         message: `${user.userName} te esta siguiendo.`,
@@ -125,10 +130,9 @@ const Actividad = () => {
             })
         }else{
             setFollowRequest(true)
-            sendFollowRequest(userFollowed, user.userID, user.userName, user.displayName, user.avatar, user.filter ).then(async res => {
+            sendFollowRequest(userFollowed, user.userID, user.userName, user.displayName, user.avatar, user.filter ).then(async () => {
                 const userNotif = await getUserByDoc_2(userFollowed);
-                await sendNotification
-                (
+                await sendNotification(
                     {
                         title: "Tienes un nuevo seguidor",
                         message: `${user.userName} te esta siguiendo.`,
@@ -158,6 +162,7 @@ const Actividad = () => {
                 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
                 <meta name="mobile-web-app-capable" content="yes"/>
             </Head>
+            <Header />
             <div className="container" style={{"padding":"0"}}>
                 <div className="row">
                     <div className="col-1" style={{"paddingLeft": "20px", "cursor":"pointer"}} ><a onClick={() => !checkRequest?router.back():setCheckRequest(false)} style={{"textDecoration":"none", "color":"black"}}><Arrow_icon/></a></div>

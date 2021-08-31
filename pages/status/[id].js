@@ -1,10 +1,12 @@
-import Head from 'next/head'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { getLikesUser, getPostbyID, getCommentsbyPost } from 'firebase/client'
-import Card from 'components/Card'
-import useUser from 'hooks/useUser'
+import Head from 'next/head'
 import router from 'next/router'
+import useUser from 'hooks/useUser'
+import Card from 'components/Card'
+import CardDesktop from "components/CardDesktop";
 import { Arrow_icon } from 'components/icons'
+import Header from "components/Header";
 
 const Status = ({postID}) => {
 
@@ -12,6 +14,11 @@ const Status = ({postID}) => {
     const [likesUser, setLikesUser] = useState([])
     const [post, setPost] = useState([])
     const [comments, setComments] = useState([])
+    const [resolutionWidth, setResolutionWidth] = useState(null);
+
+    const resize = ({target}) => {
+         setResolutionWidth(target.innerWidth);
+    }
 
     useEffect(() =>{
         let unsubscribe
@@ -29,6 +36,12 @@ const Status = ({postID}) => {
         }
     },[user])
 
+    useEffect(() => {
+        setResolutionWidth(window.innerWidth)
+        window.addEventListener("resize", resize);
+        return () => removeEventListener("resize", resize);
+	}, []);
+
     return (
         <>
         <Head>
@@ -38,36 +51,52 @@ const Status = ({postID}) => {
             <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
             <meta name="mobile-web-app-capable" content="yes"/>
         </Head>
+        <Header />
         <div className="container" style={{"padding":"0"}}>
-            <div className="row">
+            <div className="row" style={{paddingTop: '-30px'}}>
                 <div className="col-1" style={{"paddingLeft": "20px", "cursor":"pointer"}} >
                     <a onClick={() => router.back()} style={{"textDecoration":"none", "color":"black"}}><Arrow_icon/></a>
                 </div>
                 <div className="col-9" style={{"textAlign":"center","marginTop":"7px"}}><h5>Foto</h5></div>
             </div>
-            <div className="container" style={{"padding":"0"}}>
-            {
-                user && post.id &&
-                    <Card
-                        key={post.id}
-                        createdAt={post.createdAt}
-                        userName={post.userName}
-                        img={post.img}
-                        likeCount={post.likeCount}
-                        content={post.content}
-                        id={post.id}
-                        avatar={post.avatar}
-                        userID={post.userID}
-                        likesUser={likesUser}
-                        commentCount={post.commentCount}
-                        comments={comments}
-                        place={post.place}
-                        actualUserID={user.userID}
-                    />
-            }
-            <br></br>
-            </div>
-        </div>
+                    {
+                        user && post.id ?
+                            resolutionWidth <= 875 ?
+                                <Card
+                                    key={post.id}
+                                    createdAt={post.createdAt}
+                                    userName={post.userName}
+                                    img={post.img}
+                                    likeCount={post.likeCount}
+                                    content={post.content}
+                                    id={post.id}
+                                    avatar={post.avatar}
+                                    userID={post.userID}
+                                    likesUser={likesUser}
+                                    commentCount={post.commentCount}
+                                    comments={comments}
+                                    place={post.place}
+                                    actualUserID={user?.userID}
+                                /> :
+                                <CardDesktop
+                                    key={post.id}
+                                    createdAt={post.createdAt}
+                                    userName={post.userName}
+                                    img={post.img}
+                                    likeCount={post.likeCount}
+                                    content={post.content}
+                                    id={post.id}
+                                    avatar={post.avatar}
+                                    userID={post.userID}
+                                    likesUser={likesUser}
+                                    commentCount={post.commentCount}
+                                    comments={comments}
+                                    place={post.place}
+                                    actualUserID={user?.userID}
+                                /> : ''
+                    }
+                    <br></br>
+                </div>
         </>
     );
 }

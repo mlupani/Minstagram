@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef } from 'react'
-import { loginWithFacebook, getUserInCollection, addUserToCollection, generateKeyWords, signInWithEmail, updateConnectFirebaseID, getUserInCollectionByUsername, phoneRecapchaVerifier,sendPhoneCode, phoneSign, getUserInCollectionFirebaseID } from 'firebase/client.js'
+import React, { useState, useEffect, useRef } from 'react'
+import { loginWithFacebook, signInWithEmail, updateConnectFirebaseID, getUserInCollectionByUsername,sendPhoneCode, phoneSign, getUserInCollectionFirebaseID } from 'firebase/client.js'
 import { Facebook_icon } from 'components/icons'
 import ModalWindow from 'components/ModalWindow'
 import FormRegisterPhone from 'components/FormRegisterPhone'
 import FormRegisterFacebook from 'components/FormRegisterFacebook'
+import styles from "styles/LoginForm.module.css";
 
-const FormLogin = ({setUsuarioLogin, setSignup, errorLogin, setErrorLogin, setForgotPassword}) => {
+const FormLogin = ({setSignup, errorLogin, setErrorLogin, setForgotPassword}) => {
 
     let [userLogin, setUserLogin] = useState('')
     const [passLogin, setPassLogin] = useState('')
@@ -22,6 +23,43 @@ const FormLogin = ({setUsuarioLogin, setSignup, errorLogin, setErrorLogin, setFo
     const [user, setUser] = useState(null)
     const [registerWithPhone, setRegisterWithPhone] = useState('')
     const [registerWithFacebook, setRegisterWithFacebook] = useState('')
+
+    useEffect(() => {
+        if (isLoading) setErrorLogin("");
+    }, [isLoading]);
+
+    useEffect(() => {
+        if (sendCode)
+            setTimeout(() => {
+                setSendCode((prevState) => parseInt(prevState - 1));
+            }, 1000);
+        else setSendingCode(0);
+    }, [sendCode]);
+
+    useEffect(() => {
+        if (showModalCode) setSendCode(parseInt(30));
+    }, [showModalCode]);
+
+    useEffect(() => {
+        if(isPhoneNumber(userLogin))
+            setIsPhone(true)
+        else
+            setIsPhone(false)
+    }, [userLogin])
+
+    useEffect(() => {
+        if(showModalCode){
+            let options = []
+            for(let i = 0 ; i<6 ; i++){
+                if(i==0)
+                    options.push(<input type="text" autoFocus autoComplete="off" onChange={() => handleChange(i)} ref={(element) => references.current[i] = element} key={i} maxLength="1" className="form-control" style={{"height":"40px","textAlign":"center", "fontSize":"18px", "fontWeight":"700","padding":"0px","marginTop":"20px","marginBottom":"20px"}} />)
+                else
+                    options.push(<input type="text" autoComplete="off" onChange={() => handleChange(i)} ref={(element) => references.current[i] = element} key={i} maxLength="1" className="form-control" style={{"height":"40px","textAlign":"center", "fontSize":"18px", "fontWeight":"700","padding":"0px","marginTop":"20px","marginBottom":"20px"}} />)
+            }
+            setDigitsCode(options)
+        }
+
+    },[showModalCode])
 
     const handleClick = async () => {
         await loginWithFacebook().then(async logged => {
@@ -51,27 +89,6 @@ const FormLogin = ({setUsuarioLogin, setSignup, errorLogin, setErrorLogin, setFo
 
         return res
     }
-
-    useEffect(() => {
-        if(isPhoneNumber(userLogin))
-            setIsPhone(true)
-        else
-            setIsPhone(false)
-    }, [userLogin])
-
-    useEffect(() => {
-        if(showModalCode){
-            let options = []
-            for(let i = 0 ; i<6 ; i++){
-                if(i==0)
-                    options.push(<input type="text" autoFocus autoComplete="off" onChange={() => handleChange(i)} ref={(element) => references.current[i] = element} key={i} maxLength="1" className="form-control" style={{"height":"40px","textAlign":"center", "fontSize":"18px", "fontWeight":"700","padding":"0px","marginTop":"20px","marginBottom":"20px"}} />)
-                else
-                    options.push(<input type="text" autoComplete="off" onChange={() => handleChange(i)} ref={(element) => references.current[i] = element} key={i} maxLength="1" className="form-control" style={{"height":"40px","textAlign":"center", "fontSize":"18px", "fontWeight":"700","padding":"0px","marginTop":"20px","marginBottom":"20px"}} />)
-            }
-            setDigitsCode(options)
-        }
-
-    },[showModalCode])
 
     const handleChange = (index) => {
 
@@ -137,10 +154,12 @@ const FormLogin = ({setUsuarioLogin, setSignup, errorLogin, setErrorLogin, setFo
             })
         }
 
-
     }
 
     const handleChangeInput = e => {
+
+        e.preventDefault();
+
         if(e.target.id == "user"){
             setUserLogin(e.target.value)
         }
@@ -148,25 +167,6 @@ const FormLogin = ({setUsuarioLogin, setSignup, errorLogin, setErrorLogin, setFo
         if(e.target.id == "pass")
         setPassLogin(e.target.value)
     }
-
-    useEffect(() => {
-        if(isLoading)
-            setErrorLogin('')
-    }, [isLoading])
-
-    useEffect(() => {
-        if(sendCode)
-            setTimeout(() => {
-                setSendCode(prevState => parseInt(prevState -1))
-            },1000)
-        else
-            setSendingCode(0)
-    },[sendCode])
-
-    useEffect(() => {
-        if(showModalCode)
-            setSendCode(parseInt(30))
-    },[showModalCode])
 
     const handleSendCode = () => {
         //setSendingCode(1)
@@ -181,6 +181,13 @@ const FormLogin = ({setUsuarioLogin, setSignup, errorLogin, setErrorLogin, setFo
         setSendCode(parseInt(30))
     }
 
+    const handleKey = (e) => {
+        if(e.key === 'Enter')
+            if(userLogin && passLogin && passLogin.length > 5){
+                handleSignIn();
+            }
+    }
+
     if(registerWithPhone.uid)
         return (
             <FormRegisterPhone registerWithPhone={registerWithPhone} setRegisterWithPhone={setRegisterWithPhone} />
@@ -191,41 +198,39 @@ const FormLogin = ({setUsuarioLogin, setSignup, errorLogin, setErrorLogin, setFo
         )
     else
         return (
-                <div className='card-body' style={{"marginTop":"30px"}}>
+            <>
+                <div className={`card-body`} style={{"marginTop":"30px", "width": "300px", "display":"flex", "flexDirection":"column", "justifyContent":"center", "alignContent": "center"}}>
                     <div className="row">
-                        <button style={{"color":"white"}}  onClick={handleClick} className="btn btn-info btn-sm"><Facebook_icon/>&nbsp;&nbsp;Continuar con Facebook</button>
-                    </div>
-                    <div className="row">
-                        <div style={{"textAlign":"center", "marginTop":"20px", "marginBottom":"20px"}} className="col-12">
-                        o
+                        <div className="col-12" style={{marginBottom: 10}}>
+                            <input type="text" id="user" autoComplete="off" value={userLogin} onKeyPress={handleKey} onChange={handleChangeInput} style={{"fontSize":"13px"}} className="form-control" placeholder="Telefono, usuario o correo electrónico"/>
                         </div>
-                    </div>
-                    <div className="row">
+                        <br></br>
                         <div className="col-12">
-                            <input type="text" id="user" autoComplete="off" value={userLogin} onChange={handleChangeInput} style={{"fontSize":"13px"}} className="form-control" placeholder="Telefono, usuario o correo electrónico"/>
-                        </div>
-                        <div className="col-12">
-                            <input type="password" id="pass" autoComplete="off" value={passLogin} onChange={handleChangeInput} style={{"fontSize":"13px"}} className="form-control" placeholder="Contraseña"/>
+                            <input type="password" id="pass" autoComplete="off" value={passLogin} onKeyPress={handleKey} onChange={handleChangeInput} style={{"fontSize":"13px"}} className="form-control" placeholder="Contraseña"/>
                         </div>
                     </div>
                     <br></br>
-                    <div className="col-12" style={{"paddingBottom":"10px","marginBottom":"0px"}} id="widgetContainer" ref={divContainer}></div>
-                    <div className="row">
+                                        <div className="row">
                     {
                         isLoading? <div className="col-12" style={{"textAlign":"center"}}><img width="42" height="42" src='/loading.gif'></img></div>:
                         <input type="button" style={{"color":"white"}} disabled={(userLogin && passLogin && passLogin.length > 5) || isPhone?false:true} onClick={handleSignIn} className="btn btn-info btn-sm" value="Iniciar sesion" />
                     }
                     </div>
                     <div className="row">
-                        <p style={{"fontSize":"12px","marginTop":"10px"}} className="text-muted">¿No tienes cuenta?&nbsp;
-                        <a href='#' onClick={(e) => {e.preventDefault(); setSignup(true)}} style={{"textDecoration":"none"}}>Registrate</a>
-                        </p>
+                        <div style={{"textAlign":"center", "marginTop":"10px", "marginBottom":"10px"}} className="col-12">
+                        o
+                        </div>
                     </div>
+                    <div className="row">
+                        <button style={{"color":"white"}}  onClick={handleClick} className="btn btn-info btn-sm"><Facebook_icon/>&nbsp;&nbsp;Continuar con Facebook</button>
+                    </div>
+                    <br></br>
                     <div className="row">
                         <p style={{"fontSize":"12px"}}>
                             <a href='#' onClick={(e) => {e.preventDefault(); setForgotPassword(true)}} style={{"textDecoration":"none"}}>¿Olvidaste tu contraseña?</a>
                         </p>
                     </div>
+                    <div className="col-12" style={{"paddingBottom":"10px","marginBottom":"0px"}} id="widgetContainer" ref={divContainer}></div>
                     <div className="row" style={{"textAlign":"center","fontSize":"13px","fontWeight":"700"}}>
                         {errorLogin && <p className="text-danger">{errorLogin}</p>}
                     </div>
@@ -246,6 +251,14 @@ const FormLogin = ({setUsuarioLogin, setSignup, errorLogin, setErrorLogin, setFo
                         </div>
                     </ModalWindow>
                 </div>
+                <div className={styles.loginBox}>
+                    <div className="row">
+                        <p style={{"fontSize":"14px","marginTop":"10px"}} className="text-muted">¿No tienes cuenta?&nbsp;
+                        <a href='#' onClick={(e) => {e.preventDefault(); setSignup(true)}} style={{"textDecoration":"none"}}>Registrate</a>
+                        </p>
+                    </div>
+                </div>
+            </>
         );
 }
 

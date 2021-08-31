@@ -1,0 +1,57 @@
+.avatar {
+  vertical-align: middle;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-top:5px;
+}
+
+.containerImg { position: relative; min-height:200px; }
+.containerImg img { display: block; }
+.containerImg a { position: absolute; bottom:40%; left:41%; }
+
+.alertShown {
+  opacity: 1;
+  transition: all 70ms linear;
+}
+
+.alertHidden {
+  opacity: 0;
+  transition: all 70ms linear;
+}
+
+.card{
+  border:0 !important
+}
+
+.flexCol{
+  width: 600px;
+  height: auto;
+  border: 1px solid gainsboro;
+  margin-top: 65px;
+}
+
+.flexColComments{
+  width: 600px;
+  height: auto;
+  border: 1px solid gainsboro;
+  margin-top: 65px;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-between;
+}
+
+.rowContainer{
+  display:flex;
+  flex-direction: row;
+}
+
+@media (max-width: 875px) {
+  .flexCol {
+    margin-top: 0px;
+    border: none;
+  }
+  .flexComment{
+    display: none;
+  }
+}

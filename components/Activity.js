@@ -1,8 +1,8 @@
+import React, { Fragment, useEffect, useState } from 'react'
 import Link from 'next/link'
 import styles from 'styles/Activity.module.css'
 import useTimeAgo from 'hooks/useTimeAgo'
-import { Fragment, useEffect, useState } from 'react'
-import { UpdateViewNotif, UpdateViewCommentsNotif, UpdateViewCommentsofCommentsNotif, updateFollowRequestNotif, getUserByDoc, getRequestbyUserToUser} from 'firebase/client'
+import { UpdateViewNotif, UpdateViewCommentsNotif, UpdateViewCommentsofCommentsNotif, getUserByDoc, getRequestbyUserToUser} from 'firebase/client'
 import { useRouter } from 'next/router'
 import useUser from 'hooks/useUser'
 
@@ -13,6 +13,19 @@ const Activity = ({activity, handleFollow, setModalShow, setNameModal, setAvatar
     const timeAgo = useTimeAgo(activity.createdAt,"short")
     const [userActivity, setUserActivity] = useState('')
     const [requestSended, setRequestSended] = useState()
+
+    useEffect(() =>{
+        let unsubscribe
+        getUserByDoc(activity.fromUserID, setUserActivity)
+        if(user?.userID && activity.fromUserID)
+            unsubscribe = getRequestbyUserToUser(user.userID, activity?.fromUserID, setRequestSended)
+
+        if(user && !activity.fromUserID){
+            setRequestSended([])
+        }
+
+        return ()=> unsubscribe && unsubscribe()
+    },[user])
 
     if(activity.likeUserID && !activity.view){
         UpdateViewNotif(activity.id)
@@ -36,19 +49,6 @@ const Activity = ({activity, handleFollow, setModalShow, setNameModal, setAvatar
 
     }
 
-    useEffect(() =>{
-        let unsubscribe
-        getUserByDoc(activity.fromUserID, setUserActivity)
-        if(user?.userID && activity.fromUserID)
-            unsubscribe = getRequestbyUserToUser(user.userID, activity?.fromUserID, setRequestSended)
-
-        if(user && !activity.fromUserID){
-            setRequestSended([])
-        }
-
-        return ()=> unsubscribe && unsubscribe()
-    },[user])
-
     const handleModal = (name, avatar, avatarFilter, fromUserID, fromActivityID) => {
         setNameModal(name)
         setAvatarModal(avatar)
@@ -57,8 +57,6 @@ const Activity = ({activity, handleFollow, setModalShow, setNameModal, setAvatar
         setActivityIDModal(fromActivityID)
         setModalShow(true)
     }
-
-    console.log(requestSended)
 
     if(activity && user && typeof requestSended != "undefined")
         return (

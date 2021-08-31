@@ -1,114 +1,36 @@
-import React, { useState, useEffect, Fragment, useRef, useCallback } from 'react';
+import React, { useState, Fragment, useRef } from 'react';
 import Link from 'next/link'
 import Head from 'next/head'
 import styles from 'styles/Preview.module.css'
 import Filters from 'components/Filters'
-import router from 'next/router'
 import { Rotate_icon, Expand_icon } from 'components/icons'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
 import { Carousel } from 'react-responsive-carousel'
 import Cropper from 'react-easy-crop'
-import getCroppedImg from 'components/cropImage'
+import useCrop from 'hooks/useCrop';
 
 const Preview = () => {
 
-    const [uploadedImg, setUploadedImg] = useState([])
+    const {
+			onCropComplete,
+			onMediaLoaded,
+			setRotation,
+			handleNext,
+			handleExpand,
+			handleSetFilterApplied,
+			handleChangeSlide,
+			cropperWidth,
+			cropperHeight,
+			uploadedImg,
+			modeExpand,
+            selectedImg
+		} = useCrop();
+
     const [optionFilter, setOptionFilter] = useState(false)
     const [optionEdit, setOptionEdit] = useState(true)
     const filters = ["Normal","1977","Aden","Amaro","Brannan","Brooklyn","Clarendon","Crema","Gingham","Ginza","Helena","Hudson","Inkwell","Kelvin","Lo-Fi","Maven","Moon","Perpetua","Poprocket","Reyes","Skyline","Toaster","Valencia","Walden","Willow","XPro-II"]
-    const [modeExpand, setModeExpand] = useState(true)
     const refContainer= useRef(null)
-    const refImageContainer = useRef(null)
-    const [selectedImg, setSelectedImg] = useState(0)
     const [crop, setCrop] = useState({ x: 0, y: 0 })
-    const [width, setWidth] = useState(0)
-    const [height, setHeight] = useState(0)
-    const [cropperWidth, setcropperWidth] = useState(360)
-    const [cropperHeight, setcropperHeight] = useState(358)
-    const [countRotation, setCountRotation] = useState(0)
-
-    const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
-        if(uploadedImg.length){
-            //console.log(croppedAreaPixels)
-            const imagenes = uploadedImg.map((img,index) => { if(index == selectedImg){ img.croppedAreaPixels = croppedAreaPixels; return img} else {return img;} })
-            setUploadedImg(imagenes)
-            //setCroppedAreaPixels(croppedAreaPixels)
-        }
-    }, [uploadedImg])
-
-    const onMediaLoaded = ({width, height}) => {
-        setWidth(width)
-        setHeight(height)
-    }
-
-    useEffect(() =>{
-
-        if(localStorage.getItem("filesSelected")){
-            const files = JSON.parse(localStorage.getItem("filesSelected"))
-            const imagenes = files.map(img => { return {img: img.baseurl, name:img.name, rotation:img.rotation, type:img.type, base64:img.base64, filterApplied:'normal'}})
-            setUploadedImg(imagenes)
-        }
-        else
-            setUploadedImg(1);
-
-    },[])
-
-    const setRotation = useCallback(() => {
-        setCountRotation(countRotation+1)
-        const imagenes = uploadedImg.map((img,index) => { if(index == selectedImg){ img.rotation = img.rotation-90; return img} else {return img;} })
-        setUploadedImg(imagenes)
-
-        if(!modeExpand){
-            setcropperWidth(countRotation%2?width:height)
-            setcropperHeight(countRotation%2?height:width)
-        }
-    })
-
-    const handleNext = useCallback(async () => {
-
-        try {
-            const croppedImage = await getCroppedImg(
-                uploadedImg[0].img,
-                uploadedImg[0].croppedAreaPixels,
-                uploadedImg[0].rotation
-            )
-            const imagenes = uploadedImg.map((img,index) => { if(index == selectedImg){ img.base64 = croppedImage.base64, img.img = croppedImage.baseurl;img.baseurl = croppedImage.baseurl; return img} else {return img;} })
-            localStorage.setItem("imgUpload",JSON.stringify(imagenes))
-            router.push('/new')
-        } catch (e) {
-            console.error(e)
-        }
-
-    } /*[croppedAreaPixels, rotation]*/)
-
-    const handleExpand = () => {
-
-        if(!modeExpand)
-        {
-            setcropperWidth(360)
-            setcropperHeight(358)
-        }
-        else{
-            setcropperWidth(width)
-            setcropperHeight(height)
-        }
-
-        setModeExpand(modeExpand?false:true)
-    }
-
-    const handleSetFilterApplied = e => {
-        const imagenes = uploadedImg.map((img,index) => { if(index == selectedImg){ img.filterApplied = e.toLowerCase(); return img} else {return img;} })
-        setUploadedImg(imagenes)
-    }
-
-    const handleChangeSlide = (index, item) => {
-        setSelectedImg(index)
-    }
-
-    useEffect(() => {
-        if(refImageContainer.current)
-            setWidthContainer(refImageContainer.current.clientWidth)
-    },[refImageContainer.current])
 
     return (
         <Fragment>
@@ -136,7 +58,7 @@ const Preview = () => {
                             uploadedImg.length > 1?
                                 <Carousel showArrows={true} autoPlay={false}  dynamicHeight={true} emulateTouch={true} onChange={handleChangeSlide} >
                                     {uploadedImg.map(img =>
-                                        <div key={img.name} className={`filter-${img.filterApplied.toLowerCase()}`} key={img.img} >
+                                        <div key={img.name} className={`filter-${img.filterApplied.toLowerCase()}`} >
                                             <img src={img.img} />
                                         </div>
                                     )}
@@ -162,8 +84,8 @@ const Preview = () => {
                         {
                             optionEdit && uploadedImg.length == 1?
                             <Fragment>
-                                <span onClick={handleExpand} style={{"position":"absolute", "left":"5%","top":"86%","borderRadius":"100%","padding":"6px 6px", "backgroundColor":"rgba(0, 0, 0, 0.5)","color":"white", "display":"flex","borderRadius":"100%", "width":"30px","height":"30px"}}><Expand_icon width="18" height="18" /></span>
-                                <span onClick={setRotation} style={{"position":"absolute", "right":"5%","top":"86%","borderRadius":"100%","padding":"6px 6px", "backgroundColor":"rgba(0, 0, 0, 0.5)","color":"white", "display":"flex","borderRadius":"100%", "width":"30px","height":"30px"}}><Rotate_icon width="18" height="18" /></span>
+                                <span onClick={handleExpand} style={{"position":"absolute", "left":"5%","top":"86%","borderRadius":"100%","padding":"6px 6px", "backgroundColor":"rgba(0, 0, 0, 0.5)","color":"white", "display":"flex", "width":"30px","height":"30px"}}><Expand_icon width="18" height="18" /></span>
+                                <span onClick={setRotation} style={{"position":"absolute", "right":"5%","top":"86%","borderRadius":"100%","padding":"6px 6px", "backgroundColor":"rgba(0, 0, 0, 0.5)","color":"white", "display":"flex", "width":"30px","height":"30px"}}><Rotate_icon width="18" height="18" /></span>
                             </Fragment>
                             :''
                         }

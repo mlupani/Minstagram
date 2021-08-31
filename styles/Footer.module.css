@@ -104,3 +104,13 @@
     transform: translateX(-.5px);
     width: 4px;
 }
+
+.footer {
+    display:none;
+  }
+
+@media (max-width: 875px) {
+  .footer {
+    display:flex;
+  }
+}

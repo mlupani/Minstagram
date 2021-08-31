@@ -43,7 +43,7 @@ const FormResetPass = () => {
         <div className='card-body' style={{"marginTop":"30px"}}>
                 <div className="row">
                     <div className="col-12">
-                        <input type="text" id="user" autoComplete="off" value={user} onChange={(e)=>setUser(e.target.value)} style={{"fontSize":"13px"}} className="form-control" placeholder="Telefono, usuario o correo electronico"/>
+                        <input type="text" id="user" autoComplete="off" value={user} onChange={(e)=>setUser(e.target.value)} style={{"fontSize":"13px", "width": "250px"}} className="form-control" placeholder="Telefono, usuario o correo electronico"/>
                     </div>
                 </div>
                 <br></br>

@@ -1,0 +1,36 @@
+.avatar {
+  vertical-align: middle;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+/* width */
+.textMensaje::-webkit-scrollbar {
+  width: 20px;
+}
+
+/* Track */
+.textMensaje::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+.textMensaje::-webkit-scrollbar-thumb {
+  background: red; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.textMensaje::-webkit-scrollbar-thumb:hover {
+  background: #b30000; 
+}
+
+.avatar_selected {
+  vertical-align: middle;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid orchid;
+}

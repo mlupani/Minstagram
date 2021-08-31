@@ -1,6 +1,6 @@
-import { getUserConnected } from 'firebase/client.js'
-import { useRouter } from "next/router"
 import { useState, useEffect } from 'react'
+import { useRouter } from "next/router"
+import { getUserConnected } from 'firebase/client.js'
 
 export const USER_STATES = {
   NOT_LOGGED: null,
@@ -12,8 +12,12 @@ const useUser = () => {
     const [user, setUser] = useState(USER_STATES.NOT_KNOWN)
     const router = useRouter()
 
+    const conectarUsuario = async () => {
+        await getUserConnected(setUser);
+    }
+
     useEffect(() => {
-        getUserConnected(setUser)
+        conectarUsuario()
     }, [])
 
     useEffect(() => {

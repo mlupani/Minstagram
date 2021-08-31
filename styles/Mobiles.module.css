@@ -1,0 +1,45 @@
+.content{
+    justify-content: flex-start;
+    align-items: center;
+    align-self: center;
+    text-align: start;
+}
+
+.mobileImage{
+    position: absolute;
+}
+
+.screenImage{
+    z-index: 999;
+    position: relative;
+    top:100px;
+    left:150px;
+    animation: fadeInOut 5.1s infinite;
+}
+
+@keyframes fadeInOut {
+  0% {opacity:0;}
+  50% {opacity:1;}
+  100% {opacity:0;}
+}
+
+.flexContainer {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+.flexCol{
+    width: 420px;
+    margin-right: 10px;
+}
+
+@media (max-width: 875px) {
+  .flexCol:first-child {
+    display:none;
+  }
+  .flexContainer{
+    margin-top: 0px;
+  }
+}

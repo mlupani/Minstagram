@@ -32,12 +32,14 @@ if (!firebase.apps.length) {
 const db = firebase.firestore()
 
 
-export const getUserConnected = setUser => {
-    firebase.auth().onAuthStateChanged(user=> {
+export const getUserConnected = async setUser => {
+    return firebase.auth().onAuthStateChanged(async user=> {
         if(user){
             let unsubscribe
-            unsubscribe = getUserInCollection(user,setUser)
+            unsubscribe = await getUserInCollection(user,setUser)
             return () => unsubscribe && unsubscribe()
+        }else{
+            setUser(null)
         }
     });
 }
@@ -81,7 +83,6 @@ export const phoneSign = (code, seterrorSMS) => {
     return confirmationResult.confirm(code).then((result) => {
         // User signed in successfully.
         const user = result.user;
-        console.log(user)
         return user
     }).catch(({code}) => {
         // User couldn't sign in (bad verification code?)
@@ -160,9 +161,9 @@ export const sendVerificationToSignUp = async (email,pass, username, callback, c
 export const logout =  async id => {
 
     return firebase.auth().signOut().then(() => {
-        localStorage.removeItem("userMistagram");
         if(id)
             updateConnect(id)
+        localStorage.removeItem("userMistagram");
         return true
     }).catch((error) => {
         console.log("Hubo un error en el deslogeo: "+error)
@@ -461,7 +462,6 @@ export const getLatestPostsFollows = (follows, userID, callback, callbackLast, i
 
     return db
         .collection("posts")
-        .where('userID', 'in', follows)
         .orderBy("createdAt", "desc")
         .limit(limit ? limit : 5)
         .onSnapshot(({ docs }) => {
@@ -478,15 +478,14 @@ export const getLatestPostsFollows = (follows, userID, callback, callbackLast, i
 
 export const getLatestPostsFollowsPagination = (follows, userID, callback, lastVisible, callbackLast, setLoadingPage) => {
 
-    follows.push(userID)
-
     if(lastVisible){
         setLoadingPage(true)
+    }else{
+        return ;
     }
 
     return db
         .collection("posts")
-        .where('userID', 'in', follows)
         .orderBy("createdAt", "desc")
         .startAfter(lastVisible)
         .limit(5)
@@ -528,7 +527,6 @@ export const getChat = (chatName, callback, docRef, setDocRef, setLoadingPage, s
         chat.sort((a,b) => a.createdAt - b.createdAt)
 
         callback(prevState => { 
-            let messages = []
             let newChat = []
             newChat = prevState.filter(val => !chat.includes(val));
             return [...chat, ...newChat]
@@ -541,47 +539,28 @@ export const getChat = (chatName, callback, docRef, setDocRef, setLoadingPage, s
     })
 }
 
-export const getChatListen = (chatName, callback, docRef, setDocRef, setLoadingPage, setCountResults, countResults, user, setScrolling) => {
+export const getChatListen = (chatName, callback) => {
 
     return db
     .collection(chatName)
     .orderBy("createdAt", "desc")
-    .limit(10)
-    .onSnapshot((snapshot) => {
+    .onSnapshot(({docs}) => {
 
-        let newDocs = []
-        snapshot.docChanges().forEach((change) => {
+        const newDocs = docs.map((doc) => {
+                const data = doc.data();
+                const id = doc.id;
+                const createdAt = data.createdAt;
 
-            if (change.type === "added") {
-                const doc = [change.doc.data()]
-                const data = doc[0]
-                const id = change.doc.id
-                const createdAt = doc[0].createdAt
-                const viewAt = doc[0].viewAt
-
-                const newDoc = {
+                return {
                     ...data,
                     id,
                     createdAt: +createdAt.toDate(),
-                    viewAt: +viewAt.toDate()
-                }
-
-                newDocs.push(newDoc)
-
-                if(snapshot.docChanges().length > 9){
-                    setDocRef(change.doc)
-                    setScrolling(true)
-                }
-
-                setCountResults(prevState => prevState+1)
-
-            }
-
-        });
+                };
+            });
 
         //LOS ORDENO AL REVEZ
         newDocs.sort((a,b)=> a.createdAt - b.createdAt)
-        callback(prevState => [...prevState ,...newDocs])
+        callback(newDocs);
     })
 }
 
@@ -611,7 +590,7 @@ export const countNewMessages = (chats, userID, callback) => {
 
 }
 
-export const getLastMsgOfChat = async (chatName, callback) => {
+export const getLastMsgOfChat = async (chatName) => {
     return db
     .collection(chatName)
     .orderBy("createdAt", "desc")
@@ -1246,7 +1225,7 @@ export const addChattoUser = (user, userToAdd) => {
 
 }
 
-export const getUserInCollection = (user,callback) => {
+export const getUserInCollection = async (user,callback) => {
 
     let providers = user.providerData.map(prov => prov.providerId)
 
@@ -1339,19 +1318,22 @@ export const getUserByKeyword = async (keyword, callback) => {
 
 }
 
-export const getUserByDoc = (doc,callback) => {
+export const getUserByDoc = (id,callback) => {
 
-    return db
+    db
     .collection("users")
-    .doc(doc)
-    .onSnapshot((doc) => {
-        const user = { ...doc.data(), userID: doc.id}
-        callback(user)
+    .doc(id)
+    .get()
+    .then((doc) => {
+        if(doc.exists){
+            const user = { ...doc.data(), userID: doc.id}
+            callback(user)
+        }
     })
 
 }
 
-export const getUserByDoc_2 = async (doc,callback) => {
+export const getUserByDoc_2 = async (doc) => {
 
     return db
     .collection("users")
@@ -1552,3 +1534,22 @@ export const generateKeyWords = name => {
     }
     return result
 }
+
+export const getUsersSuggestions = async (userID) => {
+
+	return db
+		.collection("users")
+		.where("userID_firebase", "!=", userID)
+		.orderBy("userID_firebase", "desc")
+		.limit(5)
+		.get()
+		.then(({ docs }) => {
+			return docs.map((doc) => {
+				const { avatar, userName, filter } = doc.data();
+				return { avatar, userName, userID: doc.id, filter };
+			});
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+};

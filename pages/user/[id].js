@@ -1,13 +1,13 @@
-import { useEffect, useState, Fragment, lazy, Suspense } from 'react'
-import { logout, getPostsLikesCommentsbyUser, getPostsSaved, getLikesUser, getCommentsbyPostArray,getUserByDoc, UpdatefollowUser, RemovefollowUser, sendFollowRequest, getRequestbyUser, removeFollowRequest } from 'firebase/client'
-import styles from 'styles/User.module.css'
-import Head from 'next/head'
-import useUser from 'hooks/useUser'
-import { Logout_icon, Add_icon, Wall_icon, Wall_icon_selected, Bookmark_icon, Bookmark_icon_selected, Posts_icon,Posts_icon_selected, UserCheckIcon } from 'components/icons'
-import router, { useRouter } from 'next/router'
-import Link from 'next/link'
+import React, { useEffect, useState, Fragment, lazy, Suspense } from 'react'
 import Loadingbar from 'react-multicolor-loading-bar'
-import { sendNotification } from 'services/notifications'
+import { logout, getPostsLikesCommentsbyUser, getPostsSaved, getLikesUser, getCommentsbyPostArray, getRequestbyUser } from 'firebase/client'
+import Head from 'next/head'
+import Link from 'next/link'
+import router from 'next/router'
+import { Logout_icon, Add_icon, Wall_icon, Wall_icon_selected, Bookmark_icon, Bookmark_icon_selected, Posts_icon,Posts_icon_selected, UserCheckIcon } from 'components/icons'
+import Header from "components/Header";
+import styles from 'styles/User.module.css'
+import useFollows from 'hooks/useFollows'
 
 const ModalWindow = lazy(() => import('components/ModalWindow'))
 const Wallphoto = lazy(() => import('components/Wallphoto'))
@@ -21,9 +21,7 @@ const options = {
 
 const User = () => {
 
-    const Router = useRouter()
-    const userAct = useUser()
-    const [user, setUser] = useState('')
+    const { userAct, user, handleCancelFollow, handleFollow, FollowRequest } = useFollows();
     const [selectedOption, SetSelectedOption] = useState(options.wall)
     const [posts, setPosts] = useState(null)
     const [saves, setSaves] = useState('')
@@ -32,9 +30,7 @@ const User = () => {
     const [likesUser, setLikesUser] = useState([])
     const [savesUser, setSavesUser] = useState('')
     const [modalShow, setModalShow] = useState(false)
-    const [FollowRequest, setFollowRequest] = useState(false)
     const [requestSended, setRequestSended] = useState(null)
-    const [params, setParams] = useState(null)
 
     const handleLogout = async () => {
         const res = await logout(user.userID)
@@ -46,71 +42,6 @@ const User = () => {
     const handleOptions = option => {
         SetSelectedOption(option)
     }
-
-    const handleFollow = async (e, userFollowed, privacy) => {
-        //COMPROBAR PRIVACIDAD DEL POSIBLE FOLLOW PARA VER SI AGREGO O NO A MIS FOLLOWS
-        if(!privacy){
-            UpdatefollowUser(userAct.userID, userFollowed);
-            sendFollowRequest(userFollowed, userAct.userID, userAct.userName, userAct.displayName, userAct.avatar, userAct.filter, true  ).then(async res => {
-                await sendNotification
-                (
-                    {
-                        title: "Tienes un nuevo seguidor",
-                        message: `${userAct.userName} te esta siguiendo.`,
-                        icon: userAct.avatar,
-                        data: { url: window.location.origin+'/actividad/' },
-                        actions: [{action: "follow", title: "Notificacion de seguimiento"}]
-                    },
-                    JSON.parse(user.subscriptionNotifications)
-                )
-            })
-        }else{
-            setFollowRequest(true)
-            sendFollowRequest(userFollowed, userAct.userID, userAct.userName, userAct.displayName, userAct.avatar, userAct.filter ).then(async res => {
-                setFollowRequest(false)
-                await sendNotification
-                (
-                    {
-                        title: "Nueva solicitud de amistad",
-                        message: `${userAct.userName} quiere seguirte.`,
-                        icon: userAct.avatar,
-                        data: { url: window.location.origin+'/actividad/' },
-                        actions: [{action: "follow", title: "Notificacion de seguimiento"}]
-                    },
-                    JSON.parse(user.subscriptionNotifications)
-                )
-            })
-        }
-    }
-
-    const handleCancelFollow = (userFollowed, requested) => {
-
-        if(requested){
-            removeFollowRequest(requested).then(() =>{
-                RemovefollowUser(userAct.userID, userFollowed);
-                setModalShow(false)
-            })
-        }
-        else{
-            RemovefollowUser(userAct.userID, userFollowed);
-            setModalShow(false)
-        }
-
-    }
-
-    useEffect(() => {
-        if(Router.query.id)
-            setParams(Router.query.id)
-    },[Router.query.id])
-
-    useEffect(() =>{
-        let unsubscribeUser
-
-        if(params)
-            unsubscribeUser = getUserByDoc(params, setUser)
-
-        return () => unsubscribeUser && unsubscribeUser()
-    },[userAct, params])
 
     useEffect(() =>{
 
@@ -183,6 +114,7 @@ const User = () => {
                 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
                 <meta name="mobile-web-app-capable" content="yes"/>
             </Head>
+            <Header />
             {user && userAct?
                 <div className="container" style={{"padding":"0"}}>
                     <div className="row" style={{"borderBottom":"1px solid gainsboro"}}>
@@ -191,12 +123,14 @@ const User = () => {
                         <div className="col-2"><button style={{"textDecoration":"none","color":"black"}} className="btn btn-link"><Add_icon/></button></div>
                     </div>
                     <div className="row" style={{"marginTop":"10px"}}>
-                        <div className={`col-3`} style={{"paddingLeft": "20px","paddingTop":"5px"}} ><img width="80" height="80" className={`${styles.avatar} filter-${user.filter}`} alt={user?user.avatar:''} src={user?user.avatar:''}></img></div>
-                        <div className="col-9" style={{"paddingLeft": "30px","paddingTop":"5px"}} >
-                        <p style={{"fontSize":"20px","marginBottom":"5px"}} >{user.userName}</p>
+                        <div className={`col-4`} style={{"paddingLeft": "20px","paddingTop":"5px", justifyContent:'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}} ><img width="80" height="80" className={`${styles.avatar} filter-${user.filter}`} alt={user?user.avatar:''} src={user?user.avatar:''}></img>
+                        <p style={{"fontSize":"14px","marginBottom":"5px", "paddingRight": '20%'}} >{user.displayName}</p>
+                        </div>
+                        <div className={`col-4 ${styles.containerButton}`} style={{"paddingLeft": "30px","paddingTop":"5px"}} >
+                        <p style={{"fontSize":"20px","marginBottom":"5px", 'marginRight':'20px'}} >{user.userName}</p>
                         {
                             userAct?.userID == user?.userID?
-                            <div style={{"border":"1px solid gainsboro", "textAlign":"center"}} className="col-11" >
+                            <div style={{"border":"1px solid gainsboro", "textAlign":"center","height":"30px"}} className={`col-4 ${styles.perfilContainer}`} >
                                 <Link href="/accounts/edit/"><a style={{"width":"100%","padding":"0px"}} className="btn btn-block btn-white">Editar Perfil</a></Link>
                             </div>:
                             <div style={{"textAlign":"center"}} className="row" >
@@ -216,7 +150,7 @@ const User = () => {
                                                         <img style={{"margin":"35px"}} width="80" height="80" className={`${styles.avatar}`} alt={user?user.avatar:''} src={user?user.avatar:''}></img>
                                                         <p style={{"fontSize":"13px","borderBottom":"1px solid gainsboro","paddingBottom":"40px","paddingLeft":"40px","paddingRight":"40px"}} className="text-muted">{`Si cambias de opinión, tendrás que volver a enviar una solicitud de seguimiento a @${user.userName} .`}</p>
                                                         <ul className="list-group lista_modal" style={{"padding":"0px","margin":"0px","borderRadius":"1rem !important"}}>
-                                                            <li style={{"color":"red", "fontWeight":"bold","border":"none","paddingTop":"0px"}} onClick={()=>handleCancelFollow(user.userID,requestSended?.id)} className="list-group-item">Dejar de seguir</li>
+                                                            <li style={{"color":"red", "fontWeight":"bold","border":"none","paddingTop":"0px"}} onClick={()=>handleCancelFollow(user.userID,requestSended?.id, setModalShow)} className="list-group-item">Dejar de seguir</li>
                                                             <li style={{"border":"none"}} onClick={()=>setModalShow(false)} className="list-group-item">Cancelar</li>
                                                         </ul>
                                                     </div>
@@ -235,7 +169,7 @@ const User = () => {
                                                         <img style={{"margin":"35px"}} width="80" height="80" className={`${styles.avatar}`} alt={user?user.avatar:''} src={user?user.avatar:''}></img>
                                                         <p style={{"fontSize":"13px","borderBottom":"1px solid gainsboro","paddingBottom":"40px","paddingLeft":"40px","paddingRight":"40px"}} className="text-muted">{`Si cambias de opinión, tendrás que volver a enviar una solicitud de seguimiento a @${user.userName} .`}</p>
                                                         <ul className="list-group lista_modal" style={{"padding":"0px","margin":"0px","borderRadius":"1rem !important"}}>
-                                                            <li style={{"color":"red", "fontWeight":"bold","border":"none","paddingTop":"0px"}} onClick={()=>handleCancelFollow(user.userID,requestSended.id)} className="list-group-item">Dejar de seguir</li>
+                                                            <li style={{"color":"red", "fontWeight":"bold","border":"none","paddingTop":"0px"}} onClick={()=>handleCancelFollow(user.userID,requestSended.id, setModalShow)} className="list-group-item">Dejar de seguir</li>
                                                             <li style={{"border":"none"}} onClick={()=>setModalShow(false)} className="list-group-item">Cancelar</li>
                                                         </ul>
                                                     </div>
@@ -255,11 +189,6 @@ const User = () => {
                                 }
                             </div>
                         }
-                        </div>
-                    </div>
-                    <div className="row" style={{"marginTop":"15px"}}>
-                        <div className="col-12" style={{"paddingLeft": "20px"}} >
-                            <p style={{"fontSize":"14px","marginBottom":"5px"}} >{user.displayName}</p>
                         </div>
                     </div>
                     <div className="row" style={{"marginTop":"15px","borderTop":"1px solid gainsboro","borderBottom":"1px solid gainsboro"}}>
@@ -293,8 +222,8 @@ const User = () => {
                                         </div>
                                 }
                             </div>
-                            <div className="row">
-                                <div className="col-12" style={{"fontSize":"14px","paddingBottom":"12px"}} >
+                            <div className={`row ${styles.rowWallPhoto}`}>
+                                <div className={`col-8 ${styles.containerWallPhoto}`} style={{"fontSize":"14px","paddingBottom":"12px"}} >
                                     {
                                         selectedOption == options.wall?
                                         (
@@ -364,12 +293,6 @@ const User = () => {
                     </Loadingbar>}
                 </Fragment>
     )
-}
-
-//SERVER SIDE RENDERING
-export const getServerSideProps = async ({params}) => {
-
-    return {props: {}}
 }
 
 export default User;

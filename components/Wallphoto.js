@@ -57,7 +57,7 @@ const Wallphoto = ({dataPhotos, columnas, isClickeable}) => {
                                     <div key={fila.img}>
                                         <Carousel key={fila.img.img} autoPlay={true}  emulateTouch={true} renderIndicator={false} dynamicHeight={true} infiniteLoop={true} showThumbs={false} showIndicators={false} showStatus={false} showArrows={false} >
                                             {fila.img.map(img =>
-                                                <figure className={`filter-${img.filterApplied.toLowerCase()}`}>
+                                                <figure key={img} className={`filter-${img.filterApplied.toLowerCase()}`}>
                                                     <div style={{"backgroundImage":`url(${fila.img[0].img})`}} key={fila.img[0].img} className={styles.square+" "+styles.bg}></div>
                                                 </figure>
                                             )}

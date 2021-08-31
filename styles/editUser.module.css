@@ -18,3 +18,16 @@
   height:0px;
   opacity: 0;
 }
+
+.flexProfile{
+  display: flex;
+  margin-top: 10px;
+  width: 70%;
+  justify-content: center;
+}
+
+@media (max-width: 875px) {
+  .flexProfile {
+    justify-content: flex-start;
+  }
+}

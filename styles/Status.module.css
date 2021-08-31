@@ -1,0 +1,19 @@
+.flexColCards{
+    flex-direction: column;
+    align-self: center;
+}
+
+.flexCol{
+    width: 100%;
+    margin-right: 10px;
+}
+
+.flexColComentarios{
+  width: 300px;
+  align-self: flex-start;
+  padding-top: 100px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 10px;
+  border: 1px solid gainsboro;
+}

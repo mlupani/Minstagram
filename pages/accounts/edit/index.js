@@ -1,5 +1,5 @@
-import { useEffect, useState, Fragment, useRef } from 'react'
-import { updateUser, updateAvatarUser, handleInputFileAvatar, generateKeyWords, desvinculateFacebook, vinculateFacebook, updateProvidersUser } from 'firebase/client'
+import React, { useEffect, useState, Fragment, useRef } from 'react'
+import { updateUser, updateAvatarUser, generateKeyWords } from 'firebase/client'
 import Head from 'next/head'
 import useUser from 'hooks/useUser'
 import router from 'next/router'
@@ -9,11 +9,14 @@ import FormEditUser from 'components/FormEditUser'
 import ModalWindow from 'components/ModalWindow'
 import Loadingbar from 'react-multicolor-loading-bar'
 import EditAvatar from 'components/EditAvatar'
+import Header from "components/Header";
+import useFacebook from 'hooks/useFacebook'
 
 const EditUser = () => {
 
     const user = useUser()
     const inputFile = useRef(null)
+    const { handleFacebook, loadingFacebookLink } = useFacebook();
     const [saved, setSaved] = useState(false)
     const [mensaje, setMensaje] = useState('')
     const [privacy, setprivacy] = useState('')
@@ -30,7 +33,6 @@ const EditUser = () => {
     const [editAvatarMode, setEditAvatarMode] = useState(false)
     const [targetFiles, setTargetFiles] = useState('')
     const recaptchaRef = useRef()
-    const [loadingFacebookLink, setLoadingFacebookLink] = useState('')
     const [providers, setProviders] = useState([])
 
     useEffect(() => {
@@ -127,28 +129,7 @@ const EditUser = () => {
         setTargetFiles(e.target.files[0])
     }
 
-    const handleFacebook = (e, type) => {
-
-        e.preventDefault();
-
-        if(type == "vincular"){
-            setLoadingFacebookLink('Vinculando...')
-            vinculateFacebook(user.userID).then(() =>{
-                updateProvidersUser(user.userID, 'facebook.com', 'vincular')
-                setLoadingFacebookLink('Vinculado')
-            })
-
-        }
-
-        if(type == "desvincular"){
-            setLoadingFacebookLink('Desvinculando...')
-            desvinculateFacebook(setLoadingFacebookLink, user.userID).then(() =>{
-                updateProvidersUser(user.userID, 'facebook.com', 'desvincular')
-                setLoadingFacebookLink('Desvinculado')
-            })
-        }
-
-    }
+    
 
     if(editAvatarMode)
         return (
@@ -167,14 +148,15 @@ const EditUser = () => {
                     <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
                     <meta name="mobile-web-app-capable" content="yes"/>
                 </Head>
+                <Header />
                 {user?
                     <Fragment>
-                        <div className="container" style={{"padding":"0"}}>
+                        <div className="container" style={{"padding":"0","paddingTop": '45px'}}>
                             {
                                 !avatarState?
                                 <div className="row" style={{"borderBottom":"1px solid gainsboro"}}>
-                                    <div onClick={() => router.push('/user/[id]', `/user/${user?.userID}`)} className="col-1" style={{"paddingLeft": "20px","paddingTop":"5px"}} ><a style={{"textDecoration":"none", "color":"black"}}><Arrow_icon/></a></div>
-                                    <div className="col-10" style={{"textAlign":"center","marginTop":"7px","paddingRight":"0px !important"}} ><h6>Editar Perfil</h6></div>
+                                    <div onClick={() => router.push('/user/[id]', `/user/${user?.userID}`)} className="col-1 offset-3" style={{"paddingLeft": "20px","paddingTop":"5px"}} ><a style={{"textDecoration":"none", "color":"black"}}><Arrow_icon/></a></div>
+                                    <div className="col-4" style={{"textAlign":"center","marginTop":"7px","paddingRight":"0px !important"}} ><h6>Editar Perfil</h6></div>
                                 </div>:
                                 <Loadingbar
                                     colors={["#dc3545", "#25C5EC", "#E3F10C", "#21F10C"]}
@@ -185,15 +167,17 @@ const EditUser = () => {
                             }
                         </div>
                         <div ref={recaptchaRef}></div>
-                        <div className="row" style={{"marginTop":"10px"}}>
-                                <div className={`col-2`} style={{"paddingLeft": "20px","paddingTop":"12px","cursor":"pointer"}} onClick={()=>{setModalShow(true)}} ><img className={`${styles.avatar} filter-${user.filter}`} alt={user?user.avatar:''} src={user?user.avatar:''}></img></div>
-                                <div className="col-9" style={{"paddingLeft": "15px","paddingTop":"5px"}} >
+                        <div className={`${styles.flexProfile}`} style={{"marginTop":"10px"}}>
+                                <div style={{"paddingLeft": "20px","paddingTop":"12px","cursor":"pointer"}} onClick={()=>{setModalShow(true)}} ><img className={`${styles.avatar} filter-${user.filter}`} alt={user?user.avatar:''} src={user?user.avatar:''}></img></div>
+                                <div style={{"paddingLeft": "15px","paddingTop":"5px"}} >
                                     <p style={{"fontSize":"17px","marginBottom":"0px"}} >{userName}</p>
                                     <button onClick={()=>{setModalShow(true)}} className="btn btn-link" style={{"fontSize":"14px","marginBottom":"5px","padding":"0","textDecoration":"none","fontWeight":"700","color":"#0095f6"}} >Editar foto de perfil</button>
                                 </div>
                         </div>
-                        <FormEditUser handleSubmit={handleSubmit} setDisplayName={setDisplayName} setUserName={setUserName} setEmail={setEmail} setPhone={setPhone} 
-                        email={email} displayName={displayName} userName={userName} phone={phone} stateSend={stateSend} privacy={privacy} showActivity={showActivity} setprivacy={setprivacy} setShowActivity={setShowActivity} saved={saved} providers={providers} handleFacebook={handleFacebook} loadingFacebookLink={loadingFacebookLink}  />
+                        <div>
+                            <FormEditUser handleSubmit={handleSubmit} setDisplayName={setDisplayName} setUserName={setUserName} setEmail={setEmail} setPhone={setPhone} 
+                            email={email} displayName={displayName} userName={userName} phone={phone} stateSend={stateSend} privacy={privacy} showActivity={showActivity} setprivacy={setprivacy} setShowActivity={setShowActivity} saved={saved} providers={providers} handleFacebook={handleFacebook} loadingFacebookLink={loadingFacebookLink}  />
+                        </div>
                         <div className={`${!saved?`${styles.alertHidden}`:`${styles.alertShown}`}`} style={{"position": "fixed","bottom": "0", "width": "100%", "color": "white","fontSize": "14px","padding": "10px", "backgroundColor": "black"}} >
                             {mensaje}
                         </div>

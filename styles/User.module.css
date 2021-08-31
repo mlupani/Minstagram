@@ -1,6 +1,45 @@
 .avatar {
   vertical-align: middle;
-  width: 80px !important;
-  height: 80px !important;
+  width: 150px !important;
+  height: 150px !important;
   border-radius: 50%;
+}
+
+.rowWallPhoto{
+  justify-Content: center
+}
+
+.containerButton{
+  display: flex;
+  flex-direction: row;
+  justify-Content: center;
+  margin-top: 20px;
+}
+
+.perfilContainer{
+
+}
+
+
+@media (max-width: 875px) {
+ .rowWallPhoto{
+    justify-Content: flex-start
+  }
+  .containerWallPhoto{
+    width:100%
+  }
+  .avatar {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  .containerButton{
+    flex-direction: column;
+    margin-top: 0px !important;
+    justify-content: flex-start;
+  }
+
+  .perfilContainer{
+    width:100%;
+  }
+
 }
