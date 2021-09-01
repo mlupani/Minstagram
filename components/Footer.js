@@ -32,7 +32,7 @@ const Footer = () => {
             setShow(false)
         else
             setShow(true)
-    },[])
+    },[router.pathname, url])
 
     if(user?.avatar && show)
     return (

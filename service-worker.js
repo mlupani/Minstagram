@@ -1,3 +1,5 @@
+self.__WB_DISABLE_DEV_LOGS = true;
+
 import { skipWaiting, clientsClaim } from "workbox-core";
 import { ExpirationPlugin } from "workbox-expiration";
 import {
@@ -182,16 +184,16 @@ setCatchHandler(({ event }) => {
 		case "document":
 			// If using precached URLs:
 			return matchPrecache("/fallback");
-			// return caches.match('/fallback')
+		// return caches.match('/fallback')
 		case "image":
 			// If using precached URLs:
 			return matchPrecache("/static/images/fallback.png");
-			// return caches.match('/static/images/fallback.png')
+		// return caches.match('/static/images/fallback.png')
 		case "font":
-		// If using precached URLs:
-		// return matchPrecache(FALLBACK_FONT_URL);
-		//return caches.match('/static/fonts/fallback.otf')
-		break
+			// If using precached URLs:
+			// return matchPrecache(FALLBACK_FONT_URL);
+			//return caches.match('/static/fonts/fallback.otf')
+			break;
 		default:
 			// If we don't have a fallback, just return an error response.
 			return Response.error();

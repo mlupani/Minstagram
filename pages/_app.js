@@ -7,15 +7,6 @@ import Footer from 'components/Footer'
 
 function MyApp({ Component, pageProps }) {
 
-	/*
-  useEffect(() => {
-		if (window.navigator?.serviceWorker)
-			window.navigator?.serviceWorker
-				.register("/sw.js", { scope: "/" })
-				.then((reg) => localStorage.setItem("regSW", JSON.stringify(reg)));
-	}, []);
-	*/
-
   return (
 		<>
 			<Component {...pageProps} />

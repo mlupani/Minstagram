@@ -1,8 +1,8 @@
 {
 	"name": "Minstagram",
 	"short_name": "Minstagram",
-	"theme_color": "rgba(125,135,144,0.89)",
-	"background_color": "#000000",
+	"theme_color": "#ffffff",
+	"background_color": "#ffffff",
 	"display": "standalone",
 	"orientation": "portrait",
 	"scope": "/",

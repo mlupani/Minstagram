@@ -21,12 +21,15 @@ export const subscribeNotifications = async (callback) => {
 
     let register = JSON.parse(localStorage.getItem("regSW"));
 
-    subscription  = await register.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
-    })
+    if(register){
+        subscription  = await register?.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
+        })
+    
+        callback(subscription)
+    }
 
-    callback(subscription)
 
 }
 

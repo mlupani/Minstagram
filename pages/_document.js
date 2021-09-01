@@ -8,7 +8,7 @@ class MyDocument extends Document {
 						<Head>
 							<link rel="manifest" href="/manifest.json" />
 							<link rel="apple-touch-icon" href="/img/icon-256x256.png" />
-							<meta name="theme-color" content="#3498db" />
+							<meta name="theme-color" content="#000000" />
 						</Head>
 						<body>
 							<Main />
