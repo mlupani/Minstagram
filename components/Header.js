@@ -221,10 +221,7 @@ const header = () => {
 									</li>
 									<li>
 										<a
-											onClick={(e) => {
-												e.preventDefault();
-												handleLogout();
-											}}
+											onClick={handleLogout}
 											className="dropdown-item"
 											href="#"
 										>
