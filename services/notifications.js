@@ -19,7 +19,7 @@ export const subscribeNotifications = async (callback) => {
 
     const PUBLIC_VAPID_KEY = 'BJvVreswBv89i4HbjRtetboHnxf5satBDgWrNBxdEmFv0KuKeODvCRj2wZMda2O5Jhr1YfCp9pf5M-Cjfv367U8'
 
-    const register = await navigator.serviceWorker.register('/sw.js', {scope:'/'})
+    let register = JSON.parse(localStorage.getItem("regSW"));
 
     subscription  = await register.pushManager.subscribe({
         userVisibleOnly: true,
