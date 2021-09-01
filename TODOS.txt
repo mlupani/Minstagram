@@ -1,5 +1,6 @@
 boton de seguir de sugerencias que funcione
 inicio de sesion con facebook en online
+controlar la performance de los renderizados
 
-sw (push, cache, indexdb)
+sw (push)
 eliminar todos los datos y probar la app con nuevos datos ya para mostrar

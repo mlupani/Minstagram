@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Fragment, Suspense, lazy, useCallback } from 'react'
 import { getLatestPostsFollows, getCommentsbyPostArray, getLikesUser, getPostsSaved, getLatestPostsFollowsPagination, updateSubscriptionNotifications, getUsersSuggestions } from 'firebase/client'
+import { Instagram } from 'react-content-loader'
 import debounce from "just-debounce-it";
 import Head from 'next/head'
 import { useRouter } from "next/router";
@@ -138,14 +139,7 @@ export const Home = () => {
 								}) => (
 									<Suspense
 										key={id}
-										fallback={
-											<div
-												className="col-12"
-												style={{ textAlign: "center", marginTop: "250px" }}
-											>
-												<img width="42" height="42" src="/loading.gif"></img>
-											</div>
-										}
+										fallback={<Instagram/>}
 									>
 										<Card
 											createdAt={createdAt}
@@ -172,12 +166,7 @@ export const Home = () => {
 								)
 							)
 						) : !posts ? (
-							<div
-								className="col-12"
-								style={{ textAlign: "center", marginTop: "250px" }}
-							>
-								<img width="42" height="42" src="/loading.gif"></img>
-							</div>
+							<Instagram/>
 						) : !posts.length ? (
 							<div
 								className="col-12"

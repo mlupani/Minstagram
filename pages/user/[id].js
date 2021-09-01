@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment, lazy, Suspense } from 'react'
 import Loadingbar from 'react-multicolor-loading-bar'
 import { logout, getPostsLikesCommentsbyUser, getPostsSaved, getLikesUser, getCommentsbyPostArray, getRequestbyUser } from 'firebase/client'
+import { Instagram } from 'react-content-loader'
 import Head from 'next/head'
 import Link from 'next/link'
 import router from 'next/router'
@@ -235,7 +236,7 @@ const User = () => {
                                         posts?.length?
                                             posts.map(
                                                 ({createdAt,userName, id, img, likeCount, commentCount, content, avatar, userID, place, filter }) => (
-                                                <Suspense key={id} fallback={<div className="col-12" style={{"textAlign":"center"}}><img width="42" height="42" src='/loading.gif'></img></div>}>
+                                                <Suspense key={id} fallback={<Instagram/>}>
                                                     <Card
                                                     createdAt={createdAt}
                                                     userName={userName}
