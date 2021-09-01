@@ -67,11 +67,11 @@ const New = () => {
             <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
             <meta name="mobile-web-app-capable" content="yes"/>
         </Head>
-        <div className="container" style={{"padding":"0"}}>
+        <div className="container" style={{"max-width":"580px"}}>
             {statePost != 1?
                 <div className="row">
                     <div className="col-1" style={{"paddingLeft": "10px"}} ><a onClick={() => router.back()} style={{"textDecoration":"none", "color":"black"}}><Arrow_icon/></a></div>
-                    <div className="col-8" style={{"textAlign":"center","marginTop":"10px"}}><h6>Nueva Publicacion</h6></div>
+                    <div className="col-7" style={{"textAlign":"center","marginTop":"10px"}}><h6>Nueva Publicacion</h6></div>
                     <div className="col-2">
                         <button style={{"textDecoration":"none","fontWeight":"500"}} onClick={handleSubmit} className="btn btn-link">Compartir</button>
                     </div>

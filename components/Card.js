@@ -138,12 +138,12 @@ const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser,
         }
     }
 
-    const handleShare = (title, text) => {
+    const handleShare = (title, text, url) => {
          navigator
 			.share({
 				title,
 				text,
-				url: "/",
+				url
 			})
 			.then(() => {})
 			.catch((error) => console.log("Error sharing", error));
@@ -359,7 +359,7 @@ const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser,
 									)}
 
 									{navigator?.share && userID === user?.userID ? (
-										<span style={{cursor:'pointer'}} onClick={() => handleShare(userName, content)}>
+										<span style={{cursor:'pointer'}} onClick={() => handleShare(userName, content, `/status/${id}`)}>
 											<Share_icon />
 										</span>
 									) : (

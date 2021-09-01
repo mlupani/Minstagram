@@ -138,6 +138,17 @@ const CardDesktop = ({createdAt, userName, img, content, id, avatar, userID, lik
         }
     }
 
+	const handleShare = (title, text, url) => {
+		navigator
+			.share({
+				title,
+				text,
+				url,
+			})
+			.then(() => {})
+			.catch((error) => console.log("Error sharing", error));
+	};
+
     return (
 			<div className={`${styles.rowContainer}`}>
 				<div className={styles.flexCol} style={{ paddingRight: "0px", 'alignSelf': 'center' }}>
@@ -383,7 +394,13 @@ const CardDesktop = ({createdAt, userName, img, content, id, avatar, userID, lik
 										</Link>
 									)}
 
-									<Share_icon />
+									{navigator?.share && userID === user?.userID ? (
+										<span style={{cursor:'pointer'}} onClick={() => handleShare(userName, content, `/status/${id}`)}>
+											<Share_icon />
+										</span>
+									) : (
+										""
+									)}
 								</div>
 								{IDSave ? (
 									<div
