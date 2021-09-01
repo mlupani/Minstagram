@@ -1,4 +1,4 @@
-import webpush from '/services/webpush'
+import webpush from 'services/webpush'
 let pushSubscription
 
 export default async (req, res) => {
