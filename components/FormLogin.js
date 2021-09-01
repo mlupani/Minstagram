@@ -5,6 +5,7 @@ import ModalWindow from 'components/ModalWindow'
 import FormRegisterPhone from 'components/FormRegisterPhone'
 import FormRegisterFacebook from 'components/FormRegisterFacebook'
 import styles from "styles/LoginForm.module.css";
+import Link from "next/link";
 
 const FormLogin = ({setSignup, errorLogin, setErrorLogin, setForgotPassword}) => {
 
@@ -198,68 +199,195 @@ const FormLogin = ({setSignup, errorLogin, setErrorLogin, setForgotPassword}) =>
         )
     else
         return (
-            <>
-                <div className={`card-body`} style={{"marginTop":"30px", "width": "300px", "display":"flex", "flexDirection":"column", "justifyContent":"center", "alignContent": "center"}}>
-                    <div className="row">
-                        <div className="col-12" style={{marginBottom: 10}}>
-                            <input type="text" id="user" autoComplete="off" value={userLogin} onKeyPress={handleKey} onChange={handleChangeInput} style={{"fontSize":"13px"}} className="form-control" placeholder="Telefono, usuario o correo electrónico"/>
-                        </div>
-                        <br></br>
-                        <div className="col-12">
-                            <input type="password" id="pass" autoComplete="off" value={passLogin} onKeyPress={handleKey} onChange={handleChangeInput} style={{"fontSize":"13px"}} className="form-control" placeholder="Contraseña"/>
-                        </div>
-                    </div>
-                    <br></br>
-                                        <div className="row">
-                    {
-                        isLoading? <div className="col-12" style={{"textAlign":"center"}}><img width="42" height="42" src='/loading.gif'></img></div>:
-                        <input type="button" style={{"color":"white"}} disabled={(userLogin && passLogin && passLogin.length > 5) || isPhone?false:true} onClick={handleSignIn} className="btn btn-info btn-sm" value="Iniciar sesion" />
-                    }
-                    </div>
-                    <div className="row">
-                        <div style={{"textAlign":"center", "marginTop":"10px", "marginBottom":"10px"}} className="col-12">
-                        o
-                        </div>
-                    </div>
-                    <div className="row">
-                        <button style={{"color":"white"}}  onClick={handleClick} className="btn btn-info btn-sm"><Facebook_icon/>&nbsp;&nbsp;Continuar con Facebook</button>
-                    </div>
-                    <br></br>
-                    <div className="row">
-                        <p style={{"fontSize":"12px"}}>
-                            <a href='#' onClick={(e) => {e.preventDefault(); setForgotPassword(true)}} style={{"textDecoration":"none"}}>¿Olvidaste tu contraseña?</a>
-                        </p>
-                    </div>
-                    <div className="col-12" style={{"paddingBottom":"10px","marginBottom":"0px"}} id="widgetContainer" ref={divContainer}></div>
-                    <div className="row" style={{"textAlign":"center","fontSize":"13px","fontWeight":"700"}}>
-                        {errorLogin && <p className="text-danger">{errorLogin}</p>}
-                    </div>
-                    <ModalWindow show={showModalCode} >
-                        <div className="row">
-                            <div className="col-12" style={{"textAlign":"center","fontSize":"13px","display":"grid", "gridTemplateColumns":"repeat(6, 1fr)","alignItems": "center","columnGap":"15px","padding":"15px","paddingBottom":"0px"}}>
-                                {
-                                    digitsCode
-                                }
-                            </div>
-                            {
-                                errorSMS ? <p style={{"fontSize":"11px"}} className="text-danger">{errorSMS}</p>:''
-                            }
-                            <p style={{"fontSize":"13px","marginTop":"0px"}} className="text-muted">Ingrese el codigo de 6 digitos que fue enviado al numero <span style={{"fontWeight":"700"}}>{userLogin}</span> para ingresar</p>
-                            <button style={{"color":"white"}} ref={buttonCode} disabled={sendCode?true:false} onClick={handleSendCode} className="btn btn-info btn-sm">
-                                {sendCode && sendingCode== 2 ? `Reenviar SMS en ${sendCode}`:sendingCode == 1? 'Enviando SMS...':'Reenviar SMS'}
-                            </button>
-                        </div>
-                    </ModalWindow>
-                </div>
-                <div className={styles.loginBox}>
-                    <div className="row">
-                        <p style={{"fontSize":"14px","marginTop":"10px"}} className="text-muted">¿No tienes cuenta?&nbsp;
-                        <a href='#' onClick={(e) => {e.preventDefault(); setSignup(true)}} style={{"textDecoration":"none"}}>Registrate</a>
-                        </p>
-                    </div>
-                </div>
-            </>
-        );
+					<>
+						<div
+							className={`card-body`}
+							style={{
+								marginTop: "30px",
+								width: "300px",
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "center",
+								alignContent: "center",
+							}}
+						>
+							<div className="row">
+								<div className="col-12" style={{ marginBottom: 10 }}>
+									<input
+										type="text"
+										id="user"
+										autoComplete="off"
+										value={userLogin}
+										onKeyPress={handleKey}
+										onChange={handleChangeInput}
+										style={{ fontSize: "13px" }}
+										className="form-control"
+										placeholder="Telefono, usuario o correo electrónico"
+									/>
+								</div>
+								<br></br>
+								<div className="col-12">
+									<input
+										type="password"
+										id="pass"
+										autoComplete="off"
+										value={passLogin}
+										onKeyPress={handleKey}
+										onChange={handleChangeInput}
+										style={{ fontSize: "13px" }}
+										className="form-control"
+										placeholder="Contraseña"
+									/>
+								</div>
+							</div>
+							<br></br>
+							<div className="row">
+								{isLoading ? (
+									<div className="col-12" style={{ textAlign: "center" }}>
+										<img width="42" height="42" src="/loading.gif"></img>
+									</div>
+								) : (
+									<input
+										type="button"
+										style={{ color: "white" }}
+										disabled={
+											(userLogin && passLogin && passLogin.length > 5) ||
+											isPhone
+												? false
+												: true
+										}
+										onClick={handleSignIn}
+										className="btn btn-info btn-sm"
+										value="Iniciar sesion"
+									/>
+								)}
+							</div>
+							<div className="row">
+								<div
+									style={{
+										textAlign: "center",
+										marginTop: "10px",
+										marginBottom: "10px",
+									}}
+									className="col-12"
+								>
+									o
+								</div>
+							</div>
+							<div className="row">
+								<button
+									style={{ color: "white" }}
+									onClick={handleClick}
+									className="btn btn-info btn-sm"
+								>
+									<Facebook_icon />
+									&nbsp;&nbsp;Continuar con Facebook
+								</button>
+							</div>
+							<br></br>
+							<div className="row">
+								<p style={{ fontSize: "12px" }}>
+									<a
+										href="#"
+										onClick={(e) => {
+											e.preventDefault();
+											setForgotPassword(true);
+										}}
+										style={{ textDecoration: "none" }}
+									>
+										¿Olvidaste tu contraseña?
+									</a>
+								</p>
+							</div>
+							<div
+								className="col-12"
+								style={{ paddingBottom: "10px", marginBottom: "0px" }}
+								id="widgetContainer"
+								ref={divContainer}
+							></div>
+							<div
+								className="row"
+								style={{
+									textAlign: "center",
+									fontSize: "13px",
+									fontWeight: "700",
+								}}
+							>
+								{errorLogin && <p className="text-danger">{errorLogin}</p>}
+							</div>
+							<ModalWindow show={showModalCode}>
+								<div className="row">
+									<div
+										className="col-12"
+										style={{
+											textAlign: "center",
+											fontSize: "13px",
+											display: "grid",
+											gridTemplateColumns: "repeat(6, 1fr)",
+											alignItems: "center",
+											columnGap: "15px",
+											padding: "15px",
+											paddingBottom: "0px",
+										}}
+									>
+										{digitsCode}
+									</div>
+									{errorSMS ? (
+										<p style={{ fontSize: "11px" }} className="text-danger">
+											{errorSMS}
+										</p>
+									) : (
+										""
+									)}
+									<p
+										style={{ fontSize: "13px", marginTop: "0px" }}
+										className="text-muted"
+									>
+										Ingrese el codigo de 6 digitos que fue enviado al numero{" "}
+										<span style={{ fontWeight: "700" }}>{userLogin}</span> para
+										ingresar
+									</p>
+									<button
+										style={{ color: "white" }}
+										ref={buttonCode}
+										disabled={sendCode ? true : false}
+										onClick={handleSendCode}
+										className="btn btn-info btn-sm"
+									>
+										{sendCode && sendingCode == 2
+											? `Reenviar SMS en ${sendCode}`
+											: sendingCode == 1
+											? "Enviando SMS..."
+											: "Reenviar SMS"}
+									</button>
+								</div>
+							</ModalWindow>
+						</div>
+						<div className={styles.loginBox}>
+							<div className="row">
+								<p
+									style={{ fontSize: "14px", marginTop: "10px" }}
+									className="text-muted"
+								>
+									¿No tienes cuenta?&nbsp;
+									<a
+										href="#"
+										onClick={(e) => {
+											e.preventDefault();
+											setSignup(true);
+										}}
+										style={{ textDecoration: "none" }}
+									>
+										Registrate
+									</a>
+								</p>
+							</div>
+							<Link href="/privacy">
+								<a>Politicas de privacidad</a>
+							</Link>
+						</div>
+					</>
+				);
 }
 
 export default FormLogin;

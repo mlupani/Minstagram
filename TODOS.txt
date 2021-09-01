@@ -1,7 +1,5 @@
 boton de seguir de sugerencias que funcione
 inicio de sesion con facebook en online
-registro con facebook y registro comun
 
-manifest
 sw (push, cache, indexdb)
 eliminar todos los datos y probar la app con nuevos datos ya para mostrar

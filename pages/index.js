@@ -18,17 +18,17 @@ const index = () => {
 
   if(user === null)
     return (
-      <>
-        <div className={styles.flexContainer}>
-            <div className={styles.flexCol}>
-              <Mobiles/>
-            </div>
-            <div className={styles.flexCol}>
-              <Login/>
-            </div>
-          </div>
-      </>
-    )
+			<>
+				<div className={styles.flexContainer}>
+					<div className={styles.flexCol}>
+						<Mobiles />
+					</div>
+					<div className={styles.flexCol}>
+						<Login />
+					</div>
+				</div>
+			</>
+		);
 
   if(user === undefined) return <div style={{display:'flex', justifyContent: 'center', width: '100%', height: '100vh', alignItems: 'center'}}><img width="42" height="42" src="/loading.gif"></img></div>
 
