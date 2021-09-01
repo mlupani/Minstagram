@@ -1,10 +1,7 @@
-boton salir en movil
-arreglar la home para movil
+arreglar vistas para subir una img en desktop
 boton de seguir de sugerencias que funcione
-notificaciones en header (context?)
 inicio de sesion con facebook en online
 registro con facebook y registro comun
-arreglar vistas para subir una img en desktop
 
 manifest
 sw (push, cache, indexdb)

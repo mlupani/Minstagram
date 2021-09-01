@@ -96,10 +96,8 @@
     bottom: 5px;
     content: '';
     height: 4px;
-    left: 145px;
     margin: 0 auto;
     position: absolute;
-    right: 0;
     -webkit-transform: translateX(-.5px);
     transform: translateX(-.5px);
     width: 4px;
@@ -107,6 +105,16 @@
 
 .footer {
     display:none;
+  }
+
+  .flexAlign{
+    flex-basis: 0;
+    flex-grow: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    flex-direction: column;
   }
 
 @media (max-width: 875px) {

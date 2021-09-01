@@ -1,5 +1,5 @@
 import React, { useRef, useState, Fragment, useEffect } from 'react'
-import { IMAGEUPLOADSTATES, handleInputFile, countNewMessages, logout } from 'firebase/client'
+import { IMAGEUPLOADSTATES, countNewMessages, logout } from 'firebase/client'
 import styles from 'styles/Header.module.css'
 import {
 	Msg_icon,
@@ -8,30 +8,30 @@ import {
 	Search_icon,
 	Fav_icon,
 	FavFill_icon,
-	SearchFill_icon
+	SearchFill_icon,
+	Logout_icon,
 } from "components/icons";
 import { useRouter } from "next/router";
 import Loadingbar from 'react-multicolor-loading-bar'
 import Link from 'next/link'
 import useUser from 'hooks/useUser'
+import useDevice from "hooks/useDevice";
 import useHandleImage from "hooks/useHandleImage";
+import useActivityNotif from 'hooks/useActivityNotif';
 
 
 const header = () => {
 
+    const user = useUser()
+	const isMobile = useDevice()
     const inputFile = useRef(null)
+	const { likeNotif, commentNotif, commentOfCommentNotif, showNotif, requestNotif } = useActivityNotif();
     const { handleImage } = useHandleImage();
     const [imageUpdaloadState, setimageUploadState] = useState(null)
-    const user = useUser()
     const [countMessages, setCountMessages] = useState(0)
     const [url, setUrl] = useState("");
     const router = useRouter();
     const [show, setShow] = useState(true);
-    const [likeNotif, setLikeNotif] = useState('')
-    const [commentNotif, setCommentNotif] = useState('')
-    const [commentOfCommentNotif, setCommentOfCommentNotif] = useState('')
-    const [showNotif, setShowNotif] = useState(false)
-    const [requestNotif, setRequestNotif] = useState('')
     const [viewProfile, setViewProfile] = useState(false)
 
     const handleClickFile = e => {
@@ -52,17 +52,14 @@ const header = () => {
     useEffect(() =>{
         setUrl(router.pathname)
 
-        if(url == "/actividad"){
-            setShowNotif(false)
-        }
-
         if(url == "/login" || url == "/preview" || url == "/accounts/edit" || url == "/chat/[id]" || url == "/")
             setShow(false)
         else
             setShow(true)
     },[])
 
-    const handleLogout = async () => {
+    const handleLogout = async (e) => {
+		e.preventDefault()
         const res = await logout(user.userID)
         if(res) {
             router.replace("/")
@@ -92,14 +89,25 @@ const header = () => {
 					}`}
 				>
 					<div className={`container-fluid ${styles.container}`}>
-						<a
-							className="nav-link"
-							onClick={handleClickFile}
-							style={{ color: "black" }}
-							href="#"
-						>
-							<Cam_icon />
-						</a>
+						{isMobile && url === "/user/[id]" ? (
+							<a
+								className={`nav-link ${styles.flexItems}`}
+								onClick={handleLogout}
+								style={{ color: "black" }}
+								href="#"
+							>
+								<Logout_icon />
+							</a>
+						) : (
+							<a
+								className={`nav-link ${styles.flexItems}`}
+								onClick={handleClickFile}
+								style={{ color: "black" }}
+								href="#"
+							>
+								<Cam_icon />
+							</a>
+						)}
 						<Link href="/home">
 							<a className="navbar-brand" href="#">
 								<img
@@ -111,7 +119,10 @@ const header = () => {
 						</Link>
 						<div className={`${styles.flexMenu}`}>
 							<Link href="/home">
-								<a className="nav-item nav-link" style={{ color: "black" }}>
+								<a
+									className={`nav-link ${styles.flexItems}`}
+									style={{ color: "black" }}
+								>
 									<Home_icon
 										width="25"
 										height="25"
@@ -120,7 +131,11 @@ const header = () => {
 								</a>
 							</Link>
 							<Link href={"/inbox/"}>
-								<a className="nav-link" style={{ color: "black" }} href="#">
+								<a
+									className={`nav-link ${styles.flexItems}`}
+									style={{ color: "black" }}
+									href="#"
+								>
 									<Msg_icon fill={url && url == "/inbox" ? true : false} />
 									{
 										<span
@@ -137,7 +152,7 @@ const header = () => {
 
 							<Link href="/search">
 								<a
-									className="nav-item nav-link"
+									className={`nav-link ${styles.flexItems}`}
 									style={{ color: "black", cursor: "pointer" }}
 								>
 									{url && url == "/search" ? (
@@ -155,7 +170,7 @@ const header = () => {
 										requestNotif.length
 											? styles.notifCircle
 											: ""
-									}`}
+									} ${styles.flexItems} `}
 									style={{ color: "black", cursor: "pointer" }}
 								>
 									{url && url == "/actividad" ? <FavFill_icon /> : <Fav_icon />}
@@ -221,7 +236,11 @@ const header = () => {
 						</div>
 						<div className={styles.inboxHide}>
 							<Link href={"/inbox/"}>
-								<a className="nav-link" style={{ color: "black" }} href="#">
+								<a
+									className={`nav-link ${styles.flexItems}`}
+									style={{ color: "black" }}
+									href="#"
+								>
 									<Msg_icon fill={url && url == "/inbox" ? true : false} />
 									{
 										<span

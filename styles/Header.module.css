@@ -119,17 +119,19 @@
     font-size:15px;
 }
 
+.flexItems{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .notifCircle:after{
     background: #ed4956;
     background: rgba(var(--c37,237,73,86),1);
     border-radius: 2px;
-    bottom: 5px;
     content: '';
     height: 4px;
-    left: 145px;
     margin: 0 auto;
-    position: absolute;
-    right: 0;
     -webkit-transform: translateX(-.5px);
     transform: translateX(-.5px);
     width: 4px;

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, Fragment } from 'react'
-import { IMAGEUPLOADSTATES, getNotifLikesComments, getNotifComments, getNotifCommentsOfComments, getRequestbyUserNotif } from 'firebase/client'
+import { IMAGEUPLOADSTATES } from 'firebase/client'
 import Link from 'next/link'
 import useUser from 'hooks/useUser'
 import styles from 'styles/Footer.module.css'
@@ -7,20 +7,17 @@ import { Home_icon, Search_icon, Plus_icon, Fav_icon, FavFill_icon, SearchFill_i
 import {useRouter} from 'next/router'
 import Loadingbar from 'react-multicolor-loading-bar'
 import useHandleImage from 'hooks/useHandleImage'
+import useActivityNotif from 'hooks/useActivityNotif'
 
 const Footer = () => {
 
     const user = useUser()
+	const { likeNotif, commentNotif, commentOfCommentNotif, showNotif, requestNotif } = useActivityNotif();
 	const { handleImage } = useHandleImage();
     const inputFile = useRef(null)
     const [imageUpdaloadState, setimageUploadState] = useState(null)
     const [url, setUrl] = useState('')
     const router = useRouter()
-    const [likeNotif, setLikeNotif] = useState('')
-    const [commentNotif, setCommentNotif] = useState('')
-    const [commentOfCommentNotif, setCommentOfCommentNotif] = useState('')
-    const [showNotif, setShowNotif] = useState(false)
-    const [requestNotif, setRequestNotif] = useState('')
     const [show, setShow] = useState(true)
 
     const handleClickFile = e => {
@@ -31,43 +28,11 @@ const Footer = () => {
     useEffect(() =>{
         setUrl(router.pathname)
 
-        if(url == "/actividad"){
-            setShowNotif(false)
-        }
-
         if(url == "/login" || url == "/preview" || url == "/accounts/edit" || url == "/chat/[id]" || url == "/")
             setShow(false)
         else
             setShow(true)
-    })
-
-    useEffect(() =>{
-        let unsubscribe
-        let unsubscribeComment
-        let unsubscribeCommentOfComment
-        let unsubscribeRequestsNotif
-        if(user){
-            unsubscribe = getNotifLikesComments(user.userID, setLikeNotif)
-            unsubscribeComment = getNotifComments(user.userID, setCommentNotif)
-            unsubscribeCommentOfComment = getNotifCommentsOfComments(user.userID, setCommentOfCommentNotif)
-            unsubscribeRequestsNotif = getRequestbyUserNotif(user.userID,setRequestNotif)
-        }
-        return () => unsubscribe && unsubscribe() && unsubscribeComment && unsubscribeComment() && unsubscribeCommentOfComment && unsubscribeCommentOfComment() && unsubscribeRequestsNotif && unsubscribeRequestsNotif()
-    },[user])
-
-    useEffect(() =>{
-
-        if(url != "/actividad")
-            if(likeNotif.length || commentNotif.length || commentOfCommentNotif.length || requestNotif.length){
-                setTimeout(() =>{
-                    setShowNotif(true)
-                },2000)
-                setTimeout(() =>{
-                    setShowNotif(false)
-                },12000)
-            }
-
-    },[likeNotif, commentNotif, commentOfCommentNotif, requestNotif])
+    },[])
 
     if(user?.avatar && show)
     return (
@@ -92,8 +57,8 @@ const Footer = () => {
 						width: "100%",
 					}}
 				>
-					{likeNotif.length &&
-					(commentNotif.length || commentOfCommentNotif.length) &&
+					{likeNotif?.length &&
+					(commentNotif?.length || commentOfCommentNotif?.length) &&
 					showNotif ? (
 						<div
 							onClick={() => router.push("/actividad")}
@@ -108,7 +73,7 @@ const Footer = () => {
 								&nbsp;{commentNotif.length + commentOfCommentNotif.length}
 							</div>
 						</div>
-					) : likeNotif.length && showNotif ? (
+					) : likeNotif?.length && showNotif ? (
 						<div
 							onClick={() => router.push("/actividad")}
 							className={styles.notif}
@@ -118,8 +83,7 @@ const Footer = () => {
 								&nbsp;{likeNotif.length}
 							</div>
 						</div>
-					) : (commentNotif.length || commentOfCommentNotif.length) &&
-					  showNotif ? (
+					) : (commentNotif?.length || commentOfCommentNotif?.length) && showNotif ? (
 						<div
 							onClick={() => router.push("/actividad")}
 							className={styles.notif}
@@ -129,14 +93,14 @@ const Footer = () => {
 								&nbsp;{commentNotif.length + commentOfCommentNotif.length}
 							</div>
 						</div>
-					) : requestNotif.length && showNotif ? (
+					) : requestNotif?.length && showNotif ? (
 						<div
 							onClick={() => router.push("/actividad")}
 							className={styles.notif}
 						>
 							<div className={styles.notifItem}>
 								<UserPlusIcon width="16" height="16" />
-								&nbsp;{requestNotif.length}
+								&nbsp;{requestNotif?.length}
 							</div>
 						</div>
 					) : (
@@ -144,10 +108,10 @@ const Footer = () => {
 					)}
 
 					{imageUpdaloadState == IMAGEUPLOADSTATES.ONPROGRESS ? (
-						<a className="nav-item nav-link">&nbsp;</a>
+						<a className={`nav-item nav-link ${styles.flexAlign}`}>&nbsp;</a>
 					) : (
 						<Link href="/home">
-							<a className="nav-item nav-link" style={{ color: "black" }}>
+							<a className={`nav-item nav-link ${styles.flexAlign}`} style={{ color: "black" }}>
 								<Home_icon
 									width="25"
 									height="25"
@@ -157,10 +121,10 @@ const Footer = () => {
 						</Link>
 					)}
 					{imageUpdaloadState == IMAGEUPLOADSTATES.ONPROGRESS ? (
-						<a className="nav-item nav-link">&nbsp;</a>
+						<a className={`nav-item nav-link ${styles.flexAlign}`}>&nbsp;</a>
 					) : (
 						<Link href="/search">
-							<a className="nav-item nav-link" style={{ color: "black" }}>
+							<a className={`nav-item nav-link ${styles.flexAlign}`} style={{ color: "black" }}>
 								{url && url == "/search" ? (
 									<SearchFill_icon />
 								) : (
@@ -173,7 +137,7 @@ const Footer = () => {
 						<img width="42" height="42" src="/loading.gif"></img>
 					) : (
 						<a
-							className="nav-item nav-link"
+							className={`nav-item nav-link ${styles.flexAlign}`}
 							href="#"
 							onClick={handleClickFile}
 							style={{ color: "black" }}
@@ -182,7 +146,7 @@ const Footer = () => {
 						</a>
 					)}
 					{imageUpdaloadState == IMAGEUPLOADSTATES.ONPROGRESS ? (
-						<a className="nav-item nav-link">&nbsp;</a>
+						<a className={`nav-item nav-link ${styles.flexAlign}`}>&nbsp;</a>
 					) : (
 						<a
 							onClick={(e) => {
@@ -193,14 +157,14 @@ const Footer = () => {
 								likeNotif.length || commentNotif.length || requestNotif.length
 									? styles.notifCircle
 									: ""
-							}`}
+							} ${styles.flexAlign}`}
 							style={{ color: "black" }}
 						>
 							{url && url == "/actividad" ? <FavFill_icon /> : <Fav_icon />}
 						</a>
 					)}
 					{imageUpdaloadState == IMAGEUPLOADSTATES.ONPROGRESS ? (
-						<a className="nav-item nav-link">&nbsp;</a>
+						<a className={`nav-item nav-link ${styles.flexAlign}`}>&nbsp;</a>
 					) : (
 						<a
 							onClick={() =>
@@ -208,7 +172,7 @@ const Footer = () => {
 									shallow: true,
 								})
 							}
-							className="nav-item nav-link"
+							className={`nav-item nav-link ${styles.flexAlign}`}
 						>
 							<img
 								className={`${
