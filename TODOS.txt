@@ -1,4 +1,4 @@
-boton de seguir de sugerencias que funcione
+boton de seguir de sugerencias que funcione y mejorar en user el tema del seguimiento y solicitud de amistad
 inicio de sesion con facebook en online
 controlar la performance de los renderizados
 

@@ -20,7 +20,7 @@ const ChatInbox = ({chat, userChat, changeChat, isMobile, usuarioChat}) => {
     if(user && usuarioChatSel)
         return (
             <div className={`row ${!isMobile && (userChat?.userID === chat?.fromUserID || userChat?.userID === chat?.toUserID) ? styles.selectedRow : ''}`}
-            onClick={isMobile ? () =>router.push(`/chat/${chat.fromUserID == user.userID ? chat.toUserID : chat.fromUserID}`) : () => changeChat(usuarioChatSel)  } style={{"padding":"20px", "fontWeight":`${!chat.view && user.userID == chat.toUserID?'700':'100'}`, cursor: 'pointer'}} >
+            onClick={isMobile ? () =>router.push(`/chat/${chat.fromUserID == user.userID ? chat.toUserID : chat.fromUserID}`) : () => changeChat(usuarioChatSel)  } style={{"padding":"20px", "fontWeight":`${!chat.view && user.userID == chat.toUserID?'700':'400'}`, cursor: 'pointer'}} >
                 <div className="col-3">
                     <img style={{"width":"55px !important","height":"55px !important"}} src={`${chat.fromUserID == user.userID?chat.toUserAvatar:chat.fromUserAvatar}`} className={`${styles.avatar}`} alt="" />
                 </div>

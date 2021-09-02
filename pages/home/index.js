@@ -139,7 +139,7 @@ export const Home = () => {
 								}) => (
 									<Suspense
 										key={id}
-										fallback={<Instagram/>}
+										fallback={<Instagram uniqueKey={id} />}
 									>
 										<Card
 											createdAt={createdAt}
@@ -166,7 +166,12 @@ export const Home = () => {
 								)
 							)
 						) : !posts ? (
-							<Instagram/>
+							<div
+								className="col-12"
+								style={{ textAlign: "center", marginTop: "250px" }}
+							>
+								<img width="42" height="42" src='/loading.gif'></img>
+							</div>
 						) : !posts.length ? (
 							<div
 								className="col-12"

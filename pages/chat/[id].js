@@ -33,7 +33,7 @@ const Chat = () => {
                 <meta name="mobile-web-app-capable" content="yes"/>
             </Head>
             {user && userChat &&
-                <div className="container" style={{"padding":"0"}}>
+                <div className="container" style={{"padding":"0", "display":'flex',"flexDirection":"column"}}>
                     <div className="row" style={{"borderBottom":"1px solid gainsboro","paddingBottom":"5px"}}>
                         <div className="col-1" style={{"paddingLeft": "20px","paddingTop":"5px"}} >
                             <a onClick={() => Router.back()} style={{"textDecoration":"none", "color":"black"}}><Arrow_icon/></a>

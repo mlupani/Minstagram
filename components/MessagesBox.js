@@ -107,7 +107,7 @@ const MessagesBox = ({userChat}) => {
 					<div
 						className="col-12"
 						style={{
-							height: "490px",
+							height: "78vh",
 							paddingLeft: "20px",
 							paddingRight: "30px",
 							paddingTop: "10px",
@@ -151,7 +151,7 @@ const MessagesBox = ({userChat}) => {
 							paddingRight: "40px",
 							fontSize: "12px",
 							position: "static",
-							height: "50px",
+							height: "38px",
 						}}
 						className="col-12"
 					>
@@ -197,7 +197,6 @@ const MessagesBox = ({userChat}) => {
                             borderRadius: "22px",
                             paddingLeft: "15px",
                             paddingRight: "15px",
-                            height: "45px",
                         }}
                     >
                         <div className="input-group col-12">
