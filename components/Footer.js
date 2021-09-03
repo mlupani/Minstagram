@@ -28,7 +28,7 @@ const Footer = () => {
     useEffect(() =>{
         setUrl(router.pathname)
 
-        if(url == "/login" || url == "/preview" || url == "/accounts/edit" || url == "/chat/[id]" || url == "/")
+        if(url == "/login" || url == "/preview" || url == "/accounts/edit" || url == "/chat/[id]" || url == "/" || url == "privacy")
             setShow(false)
         else
             setShow(true)

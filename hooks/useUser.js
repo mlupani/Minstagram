@@ -21,7 +21,8 @@ const useUser = () => {
     }, [])
 
     useEffect(() => {
-        user === USER_STATES.NOT_LOGGED && router.push("/")
+        if(router.pathname !== '/privacy')
+            user === USER_STATES.NOT_LOGGED && router.push("/")
     }, [user])
 
     return user
