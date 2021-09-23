@@ -1,9 +1,9 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { addUserToCollection, updateConnectFirebaseID, generateKeyWords } from 'firebase/client'
+import { addUserToCollection, updateConnectFirebaseID, generateKeyWords, desvinculateFacebook } from 'firebase/client'
 import styles from 'styles/User.module.css'
 import { Arrow_icon } from 'components/icons'
 
-const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithFacebook}) => {
+const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithFacebook, setIsLoading}) => {
 
     let [userLogin, setUserLogin] = useState('')
     const [passLogin, setPassLogin] = useState('')
@@ -42,11 +42,18 @@ const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithFacebook}) =
         })
     }
 
+    const handleBack = (e) => {
+        e.preventDefault();
+        setIsLoading(false);
+        setRegisterWithFacebook(false)
+        desvinculateFacebook()
+    }
+
     return (
         <Fragment>
             <div className="row">
                 <div className="col-1" style={{"paddingLeft": "20px", "cursor":"pointer"}} >
-                <a href='#' onClick={(e) => {e.preventDefault(); setRegisterWithFacebook(false)}} style={{"textDecoration":"none", "color":"black"}}><Arrow_icon/></a>
+                <a href='#' onClick={handleBack} style={{"textDecoration":"none", "color":"black"}}><Arrow_icon/></a>
                 </div>
             </div>
             <div className='card-body'>
@@ -60,12 +67,12 @@ const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithFacebook}) =
                                 <img width="80" height="80" className={`${styles.avatar}`} alt={picture} src={picture}></img>
                             </div>
                     }
-                    <div className="col-12">
+                    <div className="col-12" style={{marginBottom: '15px'}}>
                         <br></br>
-                        <input type="text" id="user" autoComplete="off" value={userLogin} onChange={handleChangeInput} style={{"fontSize":"13px"}} className="form-control" placeholder="Usuario"/>
+                        <input type="text" id="usuario" autoComplete="off" value={userLogin} onChange={handleChangeInput} style={{"fontSize":"13px"}} className="form-control" placeholder="Usuario"/>
                     </div>
                     <div className="col-12">
-                        <input type="password" id="pass" autoComplete="off" value={passLogin} onChange={handleChangeInput} style={{"fontSize":"13px"}} className="form-control" placeholder="Contraseña"/>
+                        <input type="password" id="contrasena" autoComplete="off" value={passLogin} onChange={handleChangeInput} style={{"fontSize":"13px"}} className="form-control" placeholder="Contraseña"/>
                     </div>
                     <div className="col-12">
                         <br></br>

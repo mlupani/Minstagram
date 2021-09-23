@@ -195,7 +195,7 @@ const FormLogin = ({setSignup, errorLogin, setErrorLogin, setForgotPassword}) =>
         )
     else if(registerWithFacebook)
         return (
-            <FormRegisterFacebook registerWithFacebook={registerWithFacebook} setRegisterWithFacebook={setRegisterWithFacebook} />
+            <FormRegisterFacebook registerWithFacebook={registerWithFacebook} setRegisterWithFacebook={setRegisterWithFacebook} setIsLoading={setIsLoading} />
         )
     else
         return (
