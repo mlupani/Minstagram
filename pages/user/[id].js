@@ -105,6 +105,7 @@ const User = () => {
             setRequestSended(null)
     }, [requestSended])
     
+    console.log(requestSended)
 
     return (
         <Fragment>
@@ -127,7 +128,7 @@ const User = () => {
                         <div className={`col-4`} style={{"paddingLeft": "20px","paddingTop":"5px", justifyContent:'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}} ><img width="80" height="80" className={`${styles.avatar} filter-${user.filter}`} alt={user?user.avatar:''} src={user?user.avatar:''}></img>
                         <p style={{"fontSize":"14px","marginBottom":"5px", "paddingRight": '20%'}} >{user.displayName}</p>
                         </div>
-                        <div className={`col-4 ${styles.containerButton}`} style={{"paddingLeft": "30px","paddingTop":"5px"}} >
+                        <div className={`col-7 ${styles.containerButton}`} style={{"paddingLeft": "30px","paddingTop":"5px"}} >
                         <p style={{"fontSize":"20px","marginBottom":"5px", 'marginRight':'20px'}} >{user.userName}</p>
                         {
                             userAct?.userID == user?.userID?
@@ -151,8 +152,8 @@ const User = () => {
                                                         <img style={{"margin":"35px"}} width="80" height="80" className={`${styles.avatar}`} alt={user?user.avatar:''} src={user?user.avatar:''}></img>
                                                         <p style={{"fontSize":"13px","borderBottom":"1px solid gainsboro","paddingBottom":"40px","paddingLeft":"40px","paddingRight":"40px"}} className="text-muted">{`Si cambias de opinión, tendrás que volver a enviar una solicitud de seguimiento a @${user.userName} .`}</p>
                                                         <ul className="list-group lista_modal" style={{"padding":"0px","margin":"0px","borderRadius":"1rem !important"}}>
-                                                            <li style={{"color":"red", "fontWeight":"bold","border":"none","paddingTop":"0px"}} onClick={()=>handleCancelFollow(user.userID,requestSended?.id, setModalShow)} className="list-group-item">Dejar de seguir</li>
-                                                            <li style={{"border":"none"}} onClick={()=>setModalShow(false)} className="list-group-item">Cancelar</li>
+                                                            <li style={{"color":"red", "fontWeight":"bold","border":"none","paddingTop":"0px", cursor: 'pointer'}} onClick={()=>handleCancelFollow(user.userID,requestSended?.id, setModalShow)} className="list-group-item">Dejar de seguir</li>
+                                                            <li style={{"border":"none", cursor: 'pointer'}} onClick={()=>setModalShow(false)} className="list-group-item">Cancelar</li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -170,8 +171,8 @@ const User = () => {
                                                         <img style={{"margin":"35px"}} width="80" height="80" className={`${styles.avatar}`} alt={user?user.avatar:''} src={user?user.avatar:''}></img>
                                                         <p style={{"fontSize":"13px","borderBottom":"1px solid gainsboro","paddingBottom":"40px","paddingLeft":"40px","paddingRight":"40px"}} className="text-muted">{`Si cambias de opinión, tendrás que volver a enviar una solicitud de seguimiento a @${user.userName} .`}</p>
                                                         <ul className="list-group lista_modal" style={{"padding":"0px","margin":"0px","borderRadius":"1rem !important"}}>
-                                                            <li style={{"color":"red", "fontWeight":"bold","border":"none","paddingTop":"0px"}} onClick={()=>handleCancelFollow(user.userID,requestSended.id, setModalShow)} className="list-group-item">Dejar de seguir</li>
-                                                            <li style={{"border":"none"}} onClick={()=>setModalShow(false)} className="list-group-item">Cancelar</li>
+                                                            <li style={{"color":"red", "fontWeight":"bold","border":"none","paddingTop":"0px", cursor: 'pointer'}} onClick={()=>handleCancelFollow(user.userID,requestSended.id, setModalShow)} className="list-group-item">Dejar de seguir</li>
+                                                            <li style={{"border":"none", cursor: 'pointer'}} onClick={()=>setModalShow(false)} className="list-group-item">Cancelar</li>
                                                         </ul>
                                                     </div>
                                                 </div>

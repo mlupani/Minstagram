@@ -1,6 +1,6 @@
-boton de seguir de sugerencias que funcione y mejorar en user el tema del seguimiento y solicitud de amistad
-inicio de sesion con facebook en online
+inicio de sesion con facebook en online arreglar cuando se va para atras.
+
+
 controlar la performance de los renderizados
 
 sw (push)
-eliminar todos los datos y probar la app con nuevos datos ya para mostrar

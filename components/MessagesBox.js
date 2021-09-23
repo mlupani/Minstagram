@@ -12,6 +12,7 @@ import useUser from 'hooks/useUser';
 import Message from "components/Message";
 import { sendNotification } from "services/notifications";
 import styles from 'styles/MessagesBox.module.css'
+import { useRouter } from 'next/router'
 
 const MessagesBox = ({userChat}) => {
 
@@ -25,6 +26,7 @@ const MessagesBox = ({userChat}) => {
     const references = useRef(new Array())
     const [countMessagesSended, setCountMessagesSended] = useState(1)
     const [timeOut, setTimeOut] = useState()
+    const router = useRouter()
 
     const debounceGetChatNew = useCallback(debounce(() => getChatListen(nameChat, setChat),200));
 
@@ -117,6 +119,7 @@ const MessagesBox = ({userChat}) => {
 						{chat.length
 							? chat.map((message, index) => (
 									<div
+                                        onClick={() => router.push(`/user/${message.fromUserID}`)}
 										id={index}
 										className={message.id}
 										key={message.id}

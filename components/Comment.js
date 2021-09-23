@@ -1,14 +1,16 @@
-import { Fragment, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import styles from 'styles/Comment.module.css'
 import useTimeAgo from 'hooks/useTimeAgo'
 import { Fav_icon, FavFill_icon } from 'components/icons'
 import { addLikesComment, removeLikesComments, UpdateLikeCountComment, UpdateLikeCountCommentOfComments } from 'firebase/client.js'
 import CommentOfComments from 'components/CommentOfComments'
+import {useRouter} from 'next/router'
 
 const Comment = ({id, createdAt, avatar, userName, comment,post=null, likeCount, idPost, userID, likeComment=null, view="full", setResponseMode, children, commentsOfComments, filterAvatar}) => {
 
     const timeAgo = useTimeAgo(createdAt,'short')
     const [showCommentsOfComments, setShowCommentsOfComments] = useState(false)
+    const router = useRouter()
 
     const handleLikeComment = (postID,type, idDoc, idComment, commentofcomments='') => {
 
@@ -38,7 +40,7 @@ const Comment = ({id, createdAt, avatar, userName, comment,post=null, likeCount,
                 <div className="col-10" style={{"paddingLeft":"10px"}}>
                     {
                         <>
-                        <div className="col-12"><small style={{"fontWeight":"600","fontSize":"13px"}}>{userName}</small> <small style={{"color":"dimgray","fontSize":"13px"}}>{comment}</small>
+                        <div style={{cursor: 'pointer'}} onClick={() => router.push("/user/[id]", `/user/${userID}`, { shallow: true,})} className="col-12"><small style={{"fontWeight":"600","fontSize":"13px"}}>{userName}</small> <small style={{"color":"dimgray","fontSize":"13px"}}>{comment}</small>
                         {!post?
                         <span style={{"float":"right"}} >
                             {likeComment.length && likeComment.filter(likeCom=> likeCom.userIDLike == userID && likeCom.idComment == id).length?
@@ -94,7 +96,7 @@ const Comment = ({id, createdAt, avatar, userName, comment,post=null, likeCount,
     else
         return (
             <div>
-                <span style={{"marginRight":"8px"}} >
+                <span onClick={() => router.push("/user/[id]", `/user/${userID}`, { shallow: true,})} style={{"marginRight":"8px", cursor: 'pointer'}} >
                     {userName}
                 </span>
                 <span style={{"color":"dimgray"}}>{comment}</span>

@@ -79,7 +79,7 @@ const Search = () => {
 								className="col-12"
 								style={{
 									textAlign: "center",
-									marginTop: "7px",
+									marginTop: "50px",
 									paddingRight: "0px !important",
 								}}
 							>
@@ -99,7 +99,7 @@ const Search = () => {
 									className="col-9"
 									style={{
 										textAlign: "center",
-										marginTop: "7px",
+										marginTop: "70px",
 										paddingRight: "0px !important",
 									}}
 								>
@@ -117,7 +117,7 @@ const Search = () => {
 									className="col-3"
 									style={{
 										textAlign: "center",
-										marginTop: "7px",
+										marginTop: "70px",
 										paddingRight: "0px !important",
 									}}
 								>
@@ -182,7 +182,7 @@ const Search = () => {
 								href="/user/[id]"
 								as={`/user/${usuario.userID}`}
 							>
-								<div className="row">
+								<div className="row" style={{cursor:'pointer'}}>
 									<div
 										className="col-2"
 										style={{ paddingLeft: "20px", paddingTop: "5px" }}

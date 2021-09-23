@@ -38,3 +38,8 @@ a {
 figure{
   margin: 0 0 0 !important;
 }
+
+.modal-500w{
+  width: 50vw;
+  max-width: 50vw;
+}

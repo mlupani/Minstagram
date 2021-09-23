@@ -9,12 +9,14 @@ import useNearScreen from 'hooks/useNearScreen'
 import Header from 'components/Header'
 import { subscribeNotifications } from 'services/notifications'
 import styles from 'styles/Home.module.css'
+import useFollows from 'hooks/useFollows';
 
 const Card = lazy(() => import('components/Card'))
 
 export const Home = () => {
 
-    const user = useUser()
+	const user = useUser()
+	const { handleFollow } = useFollows();
     const [posts, setPosts] = useState('')
     const [likesUser, setLikesUser] = useState([])
     const [idPostsComments, setidPostsComments] = useState([]);
@@ -92,7 +94,7 @@ export const Home = () => {
     }, [user]);
 
     useEffect(() =>{
-        if(user && user.subscriptionNotifications.endpoint != subscriptionNotifications.endpoint)
+        if(user && user.subscriptionNotifications?.endpoint != subscriptionNotifications?.endpoint)
             updateSubscriptionNotifications(user.userID, subscriptionNotifications)
     },[subscriptionNotifications])
 
@@ -248,7 +250,10 @@ export const Home = () => {
 								<span style={{ marginBottom: "5px" }} className="text-muted">
 									Sugerencias para ti
 								</span>
-								{sugerencias?.map((usuario) => {
+								{
+									!sugerencias?.length ? <p>No hay sugerencias para mostrar</p> : ''
+								}
+								{sugerencias?.filter(us => !user.followsCount.includes(us.userID)).map((usuario) => {
 									return (
 										<div className="row" key={usuario.userID}>
 											<div className="col-2">
@@ -306,6 +311,7 @@ export const Home = () => {
 												<button
 													style={{ textDecoration: "none", fontSize: "13px" }}
 													className="btn btn-link"
+													onClick={e => handleFollow(e, usuario?.userID, usuario?.private)}
 												>
 													Seguir
 												</button>

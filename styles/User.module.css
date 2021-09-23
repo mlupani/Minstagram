@@ -10,14 +10,7 @@
 }
 
 .containerButton{
-  display: flex;
-  flex-direction: row;
-  justify-Content: center;
   margin-top: 20px;
-}
-
-.perfilContainer{
-
 }
 
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment} from 'react';
-import { Arrow_icon } from 'components/icons'
+import { Arrow_icon, NewMsg } from 'components/icons'
 import Head from 'next/head'
 import useUser from 'hooks/useUser'
 import { getLastMsgOfChat } from 'firebase/client'
@@ -9,6 +9,8 @@ import styles from 'styles/Inbox.module.css'
 import MessagesBox from 'components/MessagesBox';
 import useDevice from 'hooks/useDevice';
 import Header from "components/Header";
+import ModalWindow from 'components/ModalWindow';
+import NewMessage from 'components/NewMessage';
 
 const Inbox = () => {
 
@@ -18,6 +20,7 @@ const Inbox = () => {
     const [sorted, setSorted] = useState(false)
     const isMobile = useDevice()
     const [userChat, setChatUser] = useState(null);
+	const [modalMsg, setModalMsg] = useState(false)
 
 	useEffect(() => {
 		if (user) setearChats();
@@ -61,7 +64,14 @@ const Inbox = () => {
 							<meta name="mobile-web-app-capable" content="yes" />
 						</Head>
 						<Header />
-						<div className="container" style={{ padding: "0" }}>
+						<div style={{width: '500px !important'}}>
+							<ModalWindow show={modalMsg} clase={!isMobile ? "modal-500w" : ''} >
+								<NewMessage setModalMsg={setModalMsg} user={user} />
+							</ModalWindow>
+						</div>
+						{
+							user ?
+							<div className="container" style={{ padding: "0" }}>
 							<div
 								className="row"
 								style={{
@@ -95,22 +105,27 @@ const Inbox = () => {
 								</div>
 							</div>
 							<div className={styles.flexContainer}>
-                                {sorted && chats.length ?
-                                    <div className={(styles.flexCol, styles.flexColChat)}>
-                                            {
-                                                chats.map((chat) => (
-                                                    <ChatInbox
-                                                        key={chat.id}
-                                                        chat={chat}
-                                                        userChat={userChat}
-                                                        changeChat={changeChat}
-                                                        isMobile={isMobile}
-                                                        usuarioChat={chat.fromUserID === user?.userID ? chat.toUserID : chat.fromUserID}
-                                                    />
-                                                ))
-                                            }
+									<div className={(styles.flexCol, styles.flexColChat)}>
+										<div className="row">
+											<div style={{textAlign: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', paddingTop: '10px'}} className="col-12">
+												<h5>Chats</h5>
+												<span style={{cursor: 'pointer'}} onClick={() => setModalMsg(!modalMsg)}><NewMsg/></span>
+											</div>
+									</div>
+									{
+										sorted && chats.length ?
+											chats.map((chat) => (
+												<ChatInbox
+													key={chat.id}
+													chat={chat}
+													userChat={userChat}
+													changeChat={changeChat}
+													isMobile={isMobile}
+													usuarioChat={chat.fromUserID === user?.userID ? chat.toUserID : chat.fromUserID}
+												/>
+											)) : ''
+									}
                                     </div>
-                                : ""}
 								{!isMobile && user ? (
 									<div className={styles.flexCol} style={{ width: "65%" }}>
 										<MessagesBox userChat={userChat} />
@@ -119,7 +134,9 @@ const Inbox = () => {
 									""
 								)}
 							</div>
-						</div>
+						</div> : ''
+						}
+						
 					</Fragment>
 				);
 }

@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Modal from 'react-bootstrap/Modal'
 
-const ModalWindow = ({children, show}) => {
+const ModalWindow = ({children, show, clase = "info-modal"}) => {
 
     return (
         <>
-        <Modal backdrop="static" keyboard={false} dialogClassName="info-modal" aria-labelledby="contained-modal-title-vcenter" centered show={show}>
+        <Modal dialogClassName={clase} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered show={show}>
                 {children}
         </Modal>
         </>

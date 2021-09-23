@@ -391,7 +391,7 @@ const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser,
 								{likeCount.length} Me gusta
 							</p>
 							<p style={{ marginBottom: "10px" }} className="card-text">
-								<span style={{ fontWeight: "bold", marginRight: "5px" }}>
+								<span onClick={() => router.push("/user/[id]", `/user/${userID}`, { shallow: true,})} style={{ fontWeight: "bold", marginRight: "5px", cursor: 'pointer' }}>
 									{userName}
 								</span>
 								<span>
@@ -431,7 +431,7 @@ const Card = ({createdAt, userName, img, content, id, avatar, userID, likesUser,
 												likeCount={comment.likeCount}
 												id={comment.id}
 												idPost={id}
-												userID={userID}
+												userID={comment.userID}
 												view="min"
 												likeComment={
 													postLikesComments

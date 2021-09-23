@@ -28,11 +28,6 @@ const ChatInbox = ({chat, userChat, changeChat, isMobile, usuarioChat}) => {
                     <span style={{"fontSize":"14px"}}>{`${chat.fromUserID == user.userID?chat.toUsername:chat.fromUsername}`}</span> <br></br>
                     <small className="text-muted">{chat.message} - {timeAgo.replace("hace","")}</small>
                 </div>
-                {/* <div className="col" style={{"textAlign":"right","paddingTop":"5px"}}>
-                    { !chat.view && user.userID == chat.toUserID?
-                        <span style={{"color":"rgba(var(--d69,0,149,246),1)","marginRight":"15px"}}><Circle_selected width="8" height="8" /></span>:''
-                    }
-                </div> */}
             </div>
         );
     else return ('')

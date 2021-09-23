@@ -1545,8 +1545,8 @@ export const getUsersSuggestions = async (userID) => {
 		.get()
 		.then(({ docs }) => {
 			return docs.map((doc) => {
-				const { avatar, userName, filter } = doc.data();
-				return { avatar, userName, userID: doc.id, filter };
+				const { avatar, userName, filter, displayName } = doc.data();
+				return { avatar, userName, displayName, userID: doc.id, filter };
 			});
 		})
 		.catch((err) => {

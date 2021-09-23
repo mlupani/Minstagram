@@ -74,6 +74,12 @@ const Privacy = () => {
 					cambiar los términos de la presente Política de Privacidad en
 					cualquier momento.<br></br>
 					<br></br>
+					<ul>
+						<li>Los datos que se guardan y crean en la aplicaci&oacute;n son exclusivamente de prueba y pueden no ser reales, ya que se utilizan enteramente para que la aplicaci&oacute;n funcione</li>
+						<li>Los datos que se ingresan en la aplicacion se guardan todos en una base de datos en la nube utilizando el servicio de Google Firebase (Firebase Storage y Firebase Database)</li>
+						<li>Los fines para lo que se guardan estos datos son enteramente educativos, ya que no es una aplicacion para la venta.</li>
+						<li>Si los usuarios quisieran pedir la supresi&oacute;n de datos, sin inconveniente pueden enviarme un email a la casilla <a href="mailto:mlupani2@gmail.com" >mlupani2@gmail.com</a> para eliminar cualquier dato que no quisieran que permanezca en la aplicaci&oacute;n o simplemente desvinculando de facebook la cuenta dentro de la seccion de editar las opciones de usuario</li>
+					</ul>
 					<Link href="/home">
 						<a>Volver</a>
 					</Link>

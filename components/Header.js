@@ -186,7 +186,7 @@ const header = () => {
 								className="nav-item nav-link dropdown-toggle"
 								data-bs-toggle="dropdown"
 								aria-expanded="false"
-								style={{ cursor: "pointer" }}
+								style={{ cursor: "pointer", paddingTop: '4px' }}
 								id="dropdownMenuButton1"
 							>
 								<img
