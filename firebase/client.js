@@ -197,6 +197,16 @@ export const updateProfileUser = (displayName, email, phone, recaptchaRef, oldPh
 
 }
 
+export const deleteUser = () => {
+
+    var user = firebase.auth().currentUser;
+
+    deleteUser(user).catch((error) => {
+        console.log(error)
+    });
+
+}
+
 export const signUpWithEmail = async (email, password, errorCallback) => {
     return firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(({user}) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { addUserToCollection, updateConnectFirebaseID, generateKeyWords, desvinculateFacebook } from 'firebase/client'
+import { addUserToCollection, updateConnectFirebaseID, generateKeyWords, deleteUser } from 'firebase/client'
 import styles from 'styles/User.module.css'
 import { Arrow_icon } from 'components/icons'
 
@@ -46,7 +46,7 @@ const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithFacebook, se
         e.preventDefault();
         setIsLoading(false);
         setRegisterWithFacebook(false)
-        desvinculateFacebook()
+        deleteUser()
     }
 
     return (

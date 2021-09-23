@@ -1,6 +1,5 @@
 inicio de sesion con facebook en online arreglar cuando se va para atras.
-
-
+chequear que funcione bien la paginacion
 controlar la performance de los renderizados
 
 sw (push)
