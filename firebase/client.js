@@ -201,7 +201,7 @@ export const deleteUser = () => {
 
     var user = firebase.auth().currentUser;
 
-    return firebase.auth().deleteUser(user).then(() => {
+    return user.delete().then(() => {
         // User deleted.
     }).catch((error) => {
         console.log(error)
