@@ -20,6 +20,7 @@ export const subscribeNotifications = async (callback) => {
     const PUBLIC_VAPID_KEY = 'BJvVreswBv89i4HbjRtetboHnxf5satBDgWrNBxdEmFv0KuKeODvCRj2wZMda2O5Jhr1YfCp9pf5M-Cjfv367U8'
 
     navigator.serviceWorker.ready.then(async registration => {
+        console.log('registration: ', registration)
         subscription  = await registration?.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
