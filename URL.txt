@@ -1,2 +1,0 @@
-WEB: https://minstagram.vercel.app
-Github: https://github.com/mlupani/Minstagram
