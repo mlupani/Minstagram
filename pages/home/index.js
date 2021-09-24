@@ -95,7 +95,7 @@ export const Home = () => {
 
     useEffect(() =>{
         if(user){
-			console.log('hola')
+			console.log('hola subscription notif')
             updateSubscriptionNotifications(user.userID, subscriptionNotifications)
 		}
     },[subscriptionNotifications])

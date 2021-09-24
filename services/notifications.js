@@ -19,18 +19,14 @@ export const subscribeNotifications = async (callback) => {
 
     const PUBLIC_VAPID_KEY = 'BJvVreswBv89i4HbjRtetboHnxf5satBDgWrNBxdEmFv0KuKeODvCRj2wZMda2O5Jhr1YfCp9pf5M-Cjfv367U8'
 
-    let register = JSON.parse(localStorage.getItem("regSW"));
-
-    console.log('register: ', register)
-    if(register){
-        subscription  = await register?.pushManager.subscribe({
+    navigator.serviceWorker.ready.then(registration => {
+        subscription  = await registration?.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
         })
     
         callback(subscription)
-    }
-
+    });
 
 }
 

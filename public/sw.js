@@ -17,8 +17,6 @@ __webpack_require__.r(__webpack_exports__);
 /* module decorator */ module = __webpack_require__.hmd(module);
 self.__WB_DISABLE_DEV_LOGS = true;
 
-console.log('registration: ',self.registration)
-
 
 
 (0,workbox_core__WEBPACK_IMPORTED_MODULE_0__.skipWaiting)();
