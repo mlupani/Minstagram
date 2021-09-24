@@ -475,7 +475,7 @@ export const getLatestPostsFollows = (follows, userID, callback, callbackLast, i
     return db
         .collection("posts")
         .orderBy("createdAt", "desc")
-        .limit(limit ? limit : 2)
+        .limit(limit ? limit : 10)
         .onSnapshot(({ docs }) => {
             const newPosts = docs.map(getMapPosts)
 

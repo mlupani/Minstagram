@@ -94,8 +94,10 @@ export const Home = () => {
     }, [user]);
 
     useEffect(() =>{
-        if(user && user.subscriptionNotifications?.endpoint != subscriptionNotifications?.endpoint)
+        if(user){
+			console.log('hola')
             updateSubscriptionNotifications(user.userID, subscriptionNotifications)
+		}
     },[subscriptionNotifications])
 
     useEffect(() => {

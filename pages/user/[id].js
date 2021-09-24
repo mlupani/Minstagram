@@ -104,8 +104,7 @@ const User = () => {
         if(Array.isArray(requestSended) && !requestSended.length)
             setRequestSended(null)
     }, [requestSended])
-    
-    console.log(requestSended)
+
 
     return (
         <Fragment>

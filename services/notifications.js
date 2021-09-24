@@ -21,6 +21,7 @@ export const subscribeNotifications = async (callback) => {
 
     let register = JSON.parse(localStorage.getItem("regSW"));
 
+    console.log('register: ', register)
     if(register){
         subscription  = await register?.pushManager.subscribe({
             userVisibleOnly: true,
