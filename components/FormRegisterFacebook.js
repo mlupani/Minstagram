@@ -27,11 +27,11 @@ const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithFacebook, se
     },[])
 
     const handleChangeInput = e => {
-        if(e.target.id == "user"){
+        if(e.target.id == "usuario"){
             setUserLogin(e.target.value)
         }
 
-        if(e.target.id == "pass")
+        if(e.target.id == "contrasena")
         setPassLogin(e.target.value)
     }
 
@@ -48,8 +48,6 @@ const FormRegisterFacebook = ({registerWithFacebook, setRegisterWithFacebook, se
         setRegisterWithFacebook(false)
         deleteUser()
     }
-
-    console.log(registerWithFacebook)
 
     return (
         <Fragment>
