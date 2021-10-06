@@ -1,34 +1,61 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Clon de instagram realizado en NextJS
 
-## Getting Started
+## Categoría: Social
 
-First, run the development server:
+## Enlace: [Minstagram](https://minstagram.vercel.app "Minstagram")
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+___
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pequeña implementacion de un clon de Instagram, el cual tiene muchas funcionalidades del original. El estilo esta hecho con Flexbox y Bootstrap
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+**Implementaciones:**
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+* Logins con Firebase
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+* Recuperacion de contraseña
 
-## Learn More
+* Acciones en tiempo real con Firebase (Chat, creacion de posts, etc)
 
-To learn more about Next.js, take a look at the following resources:
+* Notificaciones push en ciertas acciones
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Cropp de imagenes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+* Compresion de imagenes
 
-## Deploy on Vercel
+* Diseño Responsive
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Funcionalidades:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+* Creacion con posts con la imagen elegida
+
+* Filtros de Instagram
+
+* TimeAgo en tiempo real
+
+* Likes, Comentarios y compartir posts
+
+* Seguir usuarios
+
+* Enviar mensajes privados
+
+* Eliminar posts propios
+
+* Buscar Usuarios
+
+* Vincular con Facebook
+
+* Ver actividad reciente
+
+* Seleccionar lugar en donde estes antes de crear post
+
+**Tecnologias:**
+
+* Javascript
+
+* React
+
+* NextJS
+
+* Firebase
+
+* Bootstrap
