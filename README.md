@@ -1,14 +1,15 @@
 # Clon de instagram realizado en NextJS
 
-## Categoría: Social
+![Logo](/public/favicon.ico)
 
-## Enlace: [Minstagram](https://minstagram.vercel.app "Minstagram")
+## Categoría: Social
+## Enlace: [Minstagram](https://minstagram.vercel.app "Minstagram") 
 
 ___
 
 ## Pequeña implementacion de un clon de Instagram, el cual tiene muchas funcionalidades del original. El estilo esta hecho con Flexbox y Bootstrap
 
-**Implementaciones:**
+**Implementaciones :**
 
 * Logins con Firebase
 
@@ -24,7 +25,7 @@ ___
 
 * Diseño Responsive
 
-**Funcionalidades:**
+**Funcionalidades :**
 
 * Creacion con posts con la imagen elegida
 
@@ -48,14 +49,32 @@ ___
 
 * Seleccionar lugar en donde estes antes de crear post
 
-**Tecnologias:**
+**Tecnologias :**
 
-* Javascript
+* <img title="Javascript" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="20" height="20"/>
 
-* React
+* <img title="React" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="20" height="20"/>
 
-* NextJS
+* <img title="NextJs" src="https://cdn.worldvectorlogo.com/logos/nextjs-3.svg" alt="nextjs" width="20" height="20"/>
 
-* Firebase
+* <img title="Firebase" src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="firebase" width="20" height="20"/>
 
-* Bootstrap
+* <img title="Boostrap" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg" alt="bootstrap" width="20" height="20"/>
+
+**Screens :**
+
+![screen1](https://mlupani.vercel.app/img/Minstagram-1.png)
+
+![screen1](https://mlupani.vercel.app/img/Minstagram-2.png)
+
+![screen1](https://mlupani.vercel.app/img/Minstagram-4.png)
+
+![screen1](https://mlupani.vercel.app/img/Minstagram-5.png)
+
+![screen1](https://mlupani.vercel.app/img/Minstagram-6.png)
+
+![screen1](https://mlupani.vercel.app/img/Minstagram-7.png)
+
+![screen1](https://mlupani.vercel.app/img/Minstagram-9.png)
+
+![screen1](https://mlupani.vercel.app/img/Minstagram-10.png)
