@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { loginWithFacebook, signInWithEmail, updateConnectFirebaseID, getUserInCollectionByUsername,sendPhoneCode, phoneSign, getUserInCollectionFirebaseID } from 'firebase/client.js'
-import { Facebook_icon } from 'components/icons'
+import { loginWithFacebook, signInWithEmail, updateConnectFirebaseID, getUserInCollectionByUsername,sendPhoneCode, phoneSign, getUserInCollectionFirebaseID, loginWithGoogle } from 'firebase/client.js'
+import { Facebook_icon, Google_icon } from 'components/icons'
 import ModalWindow from 'components/ModalWindow'
 import FormRegisterPhone from 'components/FormRegisterPhone'
 import FormRegisterFacebook from 'components/FormRegisterFacebook'
+import FormRegisterGoogle from 'components/FormRegisterGoogle'
 import styles from "styles/LoginForm.module.css";
 import Link from "next/link";
 
@@ -24,6 +25,7 @@ const FormLogin = ({setSignup, errorLogin, setErrorLogin, setForgotPassword}) =>
     const [user, setUser] = useState(null)
     const [registerWithPhone, setRegisterWithPhone] = useState('')
     const [registerWithFacebook, setRegisterWithFacebook] = useState('')
+    const [registerWithGoogle, setRegisterWithGoogle] = useState('')
 
     useEffect(() => {
         if (isLoading) setErrorLogin("");
@@ -80,6 +82,21 @@ const FormLogin = ({setSignup, errorLogin, setErrorLogin, setForgotPassword}) =>
         }
         })
     }
+
+	const handleClickGoogle = async () => {
+		await loginWithGoogle().then(async (logged) => {
+			setIsLoading(true);
+			if (logged) {
+				const resID = await getUserInCollectionFirebaseID(logged.user.uid);
+				if (resID.length) {
+					updateConnectFirebaseID(logged.user.uid, true);
+					setIsLoading(false);
+				} else setRegisterWithGoogle(logged);
+			} else {
+				console.log("Error al loguear");
+			}
+		});
+	};
 
     const isPhoneNumber = (phone) => {
 
@@ -197,6 +214,10 @@ const FormLogin = ({setSignup, errorLogin, setErrorLogin, setForgotPassword}) =>
         return (
             <FormRegisterFacebook registerWithFacebook={registerWithFacebook} setRegisterWithFacebook={setRegisterWithFacebook} setIsLoading={setIsLoading} />
         )
+	else if(registerWithGoogle)
+		return (
+			<FormRegisterGoogle registerWithGoogle={registerWithGoogle} setRegisterWithGoogle={setRegisterWithGoogle} setIsLoading={setIsLoading} />
+		)
     else
         return (
 					<>
@@ -276,12 +297,23 @@ const FormLogin = ({setSignup, errorLogin, setErrorLogin, setForgotPassword}) =>
 							</div>
 							<div className="row">
 								<button
-									style={{ color: "white" }}
+									style={{ color: "white", display: 'flex', alignItems: 'center', justifyContent: 'center' }}
 									onClick={handleClick}
 									className="btn btn-info btn-sm"
 								>
 									<Facebook_icon />
 									&nbsp;&nbsp;Continuar con Facebook
+								</button>
+							</div>
+							<br></br>
+							<div className="row">
+								<button
+									style={{ color: "white", alignItems: 'center', justifyContent: 'center' }}
+									onClick={handleClickGoogle}
+									className="btn btn-info btn-sm"
+								>
+									<Google_icon />
+									&nbsp;&nbsp;Continuar con Google
 								</button>
 							</div>
 							<br></br>

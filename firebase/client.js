@@ -260,9 +260,33 @@ export const vinculateFacebook = () => {
     });
 }
 
+export const vinculateGoogle = () => {
+    const googleProvider = new firebase.auth.GoogleAuthProvider()
+    var user = firebase.auth().currentUser;
+    return user.linkWithPopup(googleProvider).then((result) => {
+        // Accounts successfully linked.
+        var credential = result.credential;
+        var user = result.user;
+
+    }).catch((error) => {
+        console.log(error)
+        // Handle Errors here.
+        // ...
+    });
+}
+
 export const desvinculateFacebook = () => {
     var user = firebase.auth().currentUser;
     return user.unlink('facebook.com').then(() => {
+        // Auth provider unlinked from account
+    }).catch((error) => {
+        console.log(error)
+    });
+}
+
+export const desvinculateGoogle = () => {
+    var user = firebase.auth().currentUser;
+    return user.unlink('google.com').then(() => {
         // Auth provider unlinked from account
     }).catch((error) => {
         console.log(error)
@@ -287,8 +311,13 @@ export const updateProvidersUser = (userID, provider, vinc) => {
 
 export const loginWithFacebook = async () => {
     const facebookProvider = new firebase.auth.FacebookAuthProvider()
-    return firebase.auth().signInWithPopup
-    (facebookProvider)
+    return firebase.auth().signInWithPopup(facebookProvider)
+    .then(user => user)
+}
+
+export const loginWithGoogle = async () => {
+    const googleProvider = new firebase.auth.GoogleAuthProvider()
+    return firebase.auth().signInWithPopup(googleProvider)
     .then(user => user)
 }
 
@@ -322,7 +351,7 @@ export const addPost = ({avatar, content, img, userID, userName, place}) => {
     })
 }
 
-export const addComment = ({idPost, comment, avatar, userID, userName, toUserID, img, filter}) => {
+export const addComment = ({idPost, comment, avatar, userID, userName, toUserID, img}) => {
 
     return db.collection("comments").add({
         idPost,
@@ -338,7 +367,7 @@ export const addComment = ({idPost, comment, avatar, userID, userName, toUserID,
     })
 }
 
-export const addCommentOfComment = ({idComment, comment, avatar, userID, userName, toUserName, toUserID, img, filter}) => {
+export const addCommentOfComment = ({idComment, comment, avatar, userID, userName, toUserName, toUserID, img}) => {
 
     return db.collection("commentsOfComments").add({
         idComment,
@@ -1194,7 +1223,7 @@ export const addPostToFav = (idPost, userName, avatar, userID, likeUserID, avata
     })
 }
 
-export const addPostToSaves = (idPost, userID, img, filter) => {
+export const addPostToSaves = (idPost, userID, img) => {
     return db.collection("saves").add({
         idPost,
         userID,
@@ -1230,7 +1259,7 @@ export const addUserToCollection = (userID_firebase, displayName, userName, avat
 
 export const addChattoUser = (user, userToAdd) => {
 
-    var user = db.collection('users').doc(user);
+    db.collection('users').doc(user);
     user.update({
         chats: firebase.firestore.FieldValue.arrayUnion(userToAdd)
     });

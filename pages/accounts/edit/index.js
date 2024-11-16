@@ -11,12 +11,14 @@ import Loadingbar from 'react-multicolor-loading-bar'
 import EditAvatar from 'components/EditAvatar'
 import Header from "components/Header";
 import useFacebook from 'hooks/useFacebook'
+import useGoogle from 'hooks/useGoogle'
 
 const EditUser = () => {
 
     const user = useUser()
     const inputFile = useRef(null)
     const { handleFacebook, loadingFacebookLink } = useFacebook();
+    const { handleGoogle, loadingGoogleLink } = useGoogle();
     const [saved, setSaved] = useState(false)
     const [mensaje, setMensaje] = useState('')
     const [privacy, setprivacy] = useState('')

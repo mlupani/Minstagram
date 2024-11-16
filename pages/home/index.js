@@ -270,12 +270,19 @@ export const Home = () => {
 													}
 													className="nav-item nav-link"
 												>
-													<img
-														className={`${styles.avatarSug} filter-${usuario?.filter}`}
-														style={{ cursor: "pointer" }}
-														alt={usuario ? usuario.avatar : ""}
-														src={usuario ? usuario.avatar : ""}
-													></img>
+													{
+														usuario.avatar ? 
+															<img
+																className={`${styles.avatarSug} filter-${usuario?.filter}`}
+																style={{ cursor: "pointer" }}
+																alt={usuario ? usuario.avatar : ""}
+																src={usuario ? usuario.avatar : ""}
+																onError={(e) => {
+																	e.target.onerror = null;
+																	e.target.src = "/default-user.png";
+																}}
+															></img> : null
+													}
 												</a>
 											</div>
 											<div
